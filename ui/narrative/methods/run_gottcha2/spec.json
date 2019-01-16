@@ -1,7 +1,7 @@
 {
     "ver": "0.0.1",
     "authors": [
-        "mcflynn617"
+        "mcflynn617", "chienchilo"
     ],
     "contact": "",
     "categories": ["active"],
@@ -11,16 +11,34 @@
     },
     "parameters": [ 
         {
-            "id": "parameter_1",
-            "optional": true,
-            "advanced": false,
-            "allow_multiple": false,
-            "default_values": [ "" ],
-            "field_type": "text",
-            "text_options": {
-                "valid_ws_types": [ ]
-            }
-        }
+			"id": "input_refs",
+			"optional": false,
+			"advanced": false,
+			"allow_multiple": true,
+			"default_values": [ "" ],
+			"field_type": "text",
+			"text_options": {
+				"valid_ws_types": [ "KBaseSets.ReadsSet", "KBaseFile.PairedEndLibrary", "KBaseFile.SingleEndLibrary"]
+			}
+		},
+        {
+			"id": "db_type",
+			"optional": false,
+			"advanced": false,
+			"allow_multiple": false,
+			"default_values": ["gottcha2_db"],
+			"field_type": "dropdown",
+				"dropdown_options": {
+					"options": [
+						{
+							"value": "gottcha2_db",
+							"display": "GOTTHA2 viral and bacterial db",
+							"id": "gottcha2_db",
+							"ui-name": "gottcha2_db"
+						}
+					]
+				}
+		}
     ],
     "behavior": {
         "service-mapping": {
@@ -35,9 +53,15 @@
                     "narrative_system_variable": "workspace_id",
                     "target_property": "workspace_id"
                 },{
-                    "input_parameter": "parameter_1",
-                    "target_property": "parameter_1"
-                }
+					"input_parameter": "input_refs",
+					"target_property": "input_refs",
+					"target_type_transform": "list"
+
+				},
+				{
+					"input_parameter": "db_type",
+					"target_property": "db_type"
+				}
             ],
             "output_mapping": [
                 {
@@ -46,7 +70,11 @@
                 },{
                     "service_method_output_path": [0,"report_ref"],
                     "target_property": "report_ref"
-                }
+                },
+				{
+					"narrative_system_variable": "workspace",
+					"target_property": "workspace_name"
+				}
             ]
         }
     },
