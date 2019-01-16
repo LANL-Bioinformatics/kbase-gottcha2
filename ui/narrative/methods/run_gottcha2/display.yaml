@@ -1,6 +1,3 @@
-#
-# define display information
-#
 name: GOTTCHA2 - Taxonomic Classifier
 
 tooltip: |
@@ -10,18 +7,12 @@ screenshots: []
 
 icon: icon.png
 
-#
-# define a set of similar apps that might be useful to the user
-#
 suggestions:
     apps:
         related:
             [kb_kaiju]
 
 
-#
-# Configure the display and description of parameters
-#
 parameters :
     input_refs :
         ui-name : |
