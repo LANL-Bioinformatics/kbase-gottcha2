@@ -1,3 +1,6 @@
+#
+# define display information
+#
 name: GOTTCHA2 - Taxonomic Classifier
 
 tooltip: |
@@ -7,16 +10,22 @@ screenshots: []
 
 icon: icon.png
 
+#
+# define a set of similar apps that might be useful to the user
+#
 suggestions:
     apps:
         related:
             [kb_kaiju]
 
 
+#
+# Configure the display and description of parameters
+#
 parameters :
     input_refs :
         ui-name : |
-            Read library (or Set) objects
+            Read library (or Set) objects <font color=red>*</font>
         short-hint : |
             The read library or read library set to examine
         long-hint  : |
@@ -31,4 +40,4 @@ parameters :
 
 
 description : |
-    Gottcha2
+    <p>Performs taxonomic classification using GOTTCHA2</p>
