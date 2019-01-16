@@ -25,7 +25,7 @@ suggestions:
 parameters :
     input_refs :
         ui-name : |
-            Read library (or Set) objects <font color=red>*</font>
+            Read library (or Set) objects
         short-hint : |
             The read library or read library set to examine
         long-hint  : |
@@ -40,4 +40,4 @@ parameters :
 
 
 description : |
-    <p>Performs taxonomic classification using GOTTCHA2</p>
+    Gottcha2
