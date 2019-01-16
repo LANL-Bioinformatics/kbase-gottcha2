@@ -23,8 +23,8 @@ class gottcha2:
     # the latter method is running.
     ######################################### noqa
     VERSION = "0.0.1"
-    GIT_URL = ""
-    GIT_COMMIT_HASH = ""
+    GIT_URL = "https://github.com/LANL-Bioinformatics/kbase-gottcha2.git"
+    GIT_COMMIT_HASH = "fdabf07bc36db6a996aed0029d72ec292e1dfa41"
 
     #BEGIN_CLASS_HEADER
     #END_CLASS_HEADER

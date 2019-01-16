@@ -13,3 +13,5 @@ module-version:
 owners:
     [mcflynn617, chienchilo]
 
+data-version:
+    RefSeq-Release90
