@@ -12,7 +12,7 @@ MAINTAINER KBase Developer
 # Here we install a python coverage tool and an
 # https library that is out of date in the base image.
 RUN pip install coverage &&\
-    apt-get update && apt-get install build-essential zlib1g-dev
+    apt-get update && apt-get install -y build-essential zlib1g-dev
 
 # For minimap2 bin
 WORKDIR /kb/module
