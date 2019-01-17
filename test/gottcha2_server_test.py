@@ -66,7 +66,7 @@ class gottcha2Test(unittest.TestCase):
         # self.assertEqual(ret[...], ...) or other unittest methods
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
                                                        'input_refs': ['14672/49/1'],
-                                                       'db_type': 'gottcha2_db'
+                                                       'db_type': 'RefSeq-r90.cg.Viruses.species.fna'
                                                        })
         self.assertEqual(result[0]['fastq_files'],
                          '/kb/module/work/tmp/e5e32ee1-0090-4308-9722-d23123899ad1.inter.fastq')
