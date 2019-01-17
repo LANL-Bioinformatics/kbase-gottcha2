@@ -53,7 +53,7 @@ class gottcha2Test(unittest.TestCase):
             print('Test workspace was deleted')
 
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
-    def test_your_method(self):
+    def test_params(self):
         # Prepare test objects in workspace if needed using
         # self.getWsClient().save_objects({'workspace': self.getWsName(),
         #                                  'objects': []})
@@ -64,4 +64,6 @@ class gottcha2Test(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
         ret = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                             'parameter_1': 'Hello World!'})
+                                                       'input_refs': ['14672/49/1'],
+                                                       'db_type': 'gottcha2_db'
+                                                       })

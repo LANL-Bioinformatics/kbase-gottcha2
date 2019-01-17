@@ -2,8 +2,10 @@
 #BEGIN_HEADER
 import logging
 import os
+import subprocess
 
 from installed_clients.KBaseReportClient import KBaseReport
+from installed_clients.ReadsUtilsClient import ReadsUtils
 #END_HEADER
 
 
@@ -51,9 +53,26 @@ class gottcha2:
         # ctx is the context object
         # return variables are: output
         #BEGIN run_gottcha2
+
+        # Step 2 - Download the input data as a Fasta and
+        # We can use the AssemblyUtils module to download a FASTA file from our Assembly data object.
+        # The return object gives us the path to the file that was created.
+        logging.info('Downloading Assembly data as a Fasta file.')
+        readsUtil = ReadsUtils(self.callback_url)
+        download_reads_output = readsUtil.download_reads({'read_libraries': params['input_refs']})
+        print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
+        fastq_files = []
+        for key,val in download_reads_output['files'].items():
+            if 'fwd' in val['files'] and val['files']['fwd']:
+                fastq_files.append(val['files']['fwd'])
+            if 'rev' in val['files'] and val['files']['rev']:
+                fastq_files.append(val['files']['rev'])
+        print(f"fastq files {fastq_files}")
+        # cmd = ['gottcha2.py', 'ROLLUP_DOC', '-m', 'full', '-i', fastq_files, ]
+        # p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': params['parameter_1']},
+                                                'text_message': ','.join(fastq_files)},
                                                 'workspace_name': params['workspace_name']})
         output = {
             'report_name': report_info['name'],
