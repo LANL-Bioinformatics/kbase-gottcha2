@@ -72,9 +72,10 @@ class gottcha2:
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
         os.makedirs(output_dir)
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
-               'default', '-d', params['db_type']]
+               'default', '-d', '/data/' + params['db_type']]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
+        print(f'subprocess {p.communicate()}')
+        print(f'cmd {cmd}')
 
         # Step 5 - Build a Report and return
         objects_created = []
