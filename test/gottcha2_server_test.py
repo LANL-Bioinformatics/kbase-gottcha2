@@ -3,6 +3,7 @@ import os
 import time
 import unittest
 from configparser import ConfigParser
+import subprocess
 
 from gottcha2.gottcha2Impl import gottcha2
 from gottcha2.gottcha2Server import MethodContext
@@ -63,7 +64,22 @@ class gottcha2Test(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        ret = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
+        result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
                                                        'input_refs': ['14672/49/1'],
                                                        'db_type': 'gottcha2_db'
                                                        })
+        self.assertEqual(result[0]['fastq_files'],
+                         '/kb/module/work/tmp/e5e32ee1-0090-4308-9722-d23123899ad1.inter.fastq')
+
+    def test_gottcha(self):
+        # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/test.fastq', '-o', '/kb/module/test/data/output', '-p',
+               'testing', '-d', '/data/RefSeq-r90.cg.Viruses.species.fna']
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(p.communicate())
+        self.assertTrue(os.path.exists('/kb/module/test/data/output/testing.summary.tsv'))
+        self.assertTrue(os.path.exists('/kb/module/test/data/output/testing.krona.html'))
+        with open('/kb/module/test/data/output/testing.summary.tsv', 'r') as fp:
+            lines = fp.readlines()
+            self.assertTrue('Zaire ebolavirus' in lines[5])
+

@@ -36,7 +36,7 @@ class gottcha2:
     def __init__(self, config):
         #BEGIN_CONSTRUCTOR
         self.callback_url = os.environ['SDK_CALLBACK_URL']
-        self.shared_folder = config['scratch']
+        self.scratch = config['scratch']
         logging.basicConfig(format='%(created)s %(levelname)s: %(message)s',
                             level=logging.INFO)
         #END_CONSTRUCTOR
@@ -68,8 +68,12 @@ class gottcha2:
             if 'rev' in val['files'] and val['files']['rev']:
                 fastq_files.append(val['files']['rev'])
         print(f"fastq files {fastq_files}")
-        # cmd = ['gottcha2.py', 'ROLLUP_DOC', '-m', 'full', '-i', fastq_files, ]
-        # p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        fastq_files_string = ' '.join(fastq_files)
+        output_dir = os.path.join(self.scratch, 'gottcha2_output')
+        os.makedirs(output_dir)
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
+               'default', '-d', params['db_type']]
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         report = KBaseReport(self.callback_url)
         report_info = report.create({'report': {'objects_created':[],
                                                 'text_message': ','.join(fastq_files)},
@@ -77,6 +81,7 @@ class gottcha2:
         output = {
             'report_name': report_info['name'],
             'report_ref': report_info['ref'],
+            'fastq_files': fastq_files_string,
         }
         #END run_gottcha2
 

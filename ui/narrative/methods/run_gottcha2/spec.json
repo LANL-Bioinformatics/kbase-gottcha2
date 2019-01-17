@@ -26,15 +26,21 @@
 			"optional": false,
 			"advanced": false,
 			"allow_multiple": false,
-			"default_values": ["gottcha2_db"],
+			"default_values": ["RefSeq-r90.cg.BacteriaViruses.species.fna"],
 			"field_type": "dropdown",
 				"dropdown_options": {
 					"options": [
 						{
-							"value": "gottcha2_db",
-							"display": "GOTTHA2 viral and bacterial db",
-							"id": "gottcha2_db",
-							"ui-name": "gottcha2_db"
+							"value": "RefSeq-r90.cg.BacteriaViruses.species.fna",
+							"display": "GOTTCHA2 viral and bacterial db",
+							"id": "RefSeq-r90.cg.BacteriaViruses.species.fna",
+							"ui-name": "RefSeq-r90.cg.BacteriaViruses.species.fna"
+						},
+						{
+							"value": "RefSeq-r90.cg.Viruses.species.fna",
+							"display": "GOTTCHA2 viral db",
+							"id": "RefSeq-r90.cg.Viruses.species.fna",
+							"ui-name": "RefSeq-r90.cg.Viruses.species.fna"
 						}
 					]
 				}
