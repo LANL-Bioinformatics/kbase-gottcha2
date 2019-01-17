@@ -25,7 +25,7 @@ RUN \
 RUN \
     git clone https://github.com/marbl/Krona && \
     cd Krona/KronaTools && \
-    ./install.pl --prefix /kb/deployment/bin 
+    ./install.pl --prefix /kb/deployment
 #    ./install.pl && \
 #    mkdir taxonomy && \
 #    ./updateTaxonomy.sh && \
