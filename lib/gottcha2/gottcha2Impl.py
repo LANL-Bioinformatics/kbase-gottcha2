@@ -79,12 +79,14 @@ class gottcha2:
         # Step 5 - Build a Report and return
         objects_created = []
         output_files = os.listdir(output_dir)
-        output_html_files = [os.path.join(output_dir, 'default.krona.html')]
+
+        output_html_files = {'path': os.path.join(output_dir, 'default.krona.html'),
+                             'name': 'default.krona.html'}
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
                          'file_links': output_files,
-                         'html_links': output_html_files,
+                         'html_links': [output_html_files],
                          'direct_html_link_index': 0,
                          'html_window_height': 333}
 
