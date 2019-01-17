@@ -12,21 +12,20 @@ MAINTAINER KBase Developer
 # Here we install a python coverage tool and an
 # https library that is out of date in the base image.
 RUN pip install coverage &&\
-    apt-get update && apt-get install -y build-essential zlib1g-dev
+    apt-get update && apt-get install -y build-essential zlib1g-dev gawk
 
 # For minimap2 bin
 WORKDIR /kb/module
 RUN \
     git clone https://github.com/lh3/minimap2 && \
     cd minimap2 && make && \
-    export PATH=/kb/module/minimap2:$PATH
+    cp minimap2 /kb/deployment/bin 
 
 # For Krona Tools
 RUN \
     git clone https://github.com/marbl/Krona && \
     cd Krona/KronaTools && \
-    ./install.pl && \
-    export PATH=/usr/local/bin:$PATH
+    ./install.pl --prefix /kb/deployment/bin 
 #    ./install.pl && \
 #    mkdir taxonomy && \
 #    ./updateTaxonomy.sh && \
