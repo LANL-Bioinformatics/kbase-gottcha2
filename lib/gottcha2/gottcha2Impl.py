@@ -74,15 +74,24 @@ class gottcha2:
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
                'default', '-d', params['db_type']]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        report = KBaseReport(self.callback_url)
-        report_info = report.create({'report': {'objects_created':[],
-                                                'text_message': ','.join(fastq_files)},
-                                                'workspace_name': params['workspace_name']})
-        output = {
-            'report_name': report_info['name'],
-            'report_ref': report_info['ref'],
-            'fastq_files': fastq_files_string,
-        }
+
+
+        # Step 5 - Build a Report and return
+        objects_created = []
+        output_files = os.listdir(output_dir)
+        output_html_files = [os.path.join(output_dir, 'default.krona.html')]
+        report_params = {'message': 'GOTTCHA2 run finished',
+                         'workspace_name': params.get('workspace_name'),
+                         'objects_created': objects_created,
+                         'file_links': output_files,
+                         'html_links': output_html_files,
+                         'direct_html_link_index': 0,
+                         'html_window_height': 333}
+
+        # STEP 6: contruct the output to send back
+        kbase_report_client = KBaseReport(self.callback_url)
+        output = kbase_report_client.create_extended_report(report_params)
+      
         #END run_gottcha2
 
         # At some point might do deeper type checking...
