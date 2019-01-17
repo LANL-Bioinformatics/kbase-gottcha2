@@ -6,7 +6,8 @@ name: GOTTCHA2 - Taxonomic Classifier
 tooltip: |
     Taxonomic Classification of Shotgun Metagenomic Read data
 
-screenshots: []
+screenshots:
+    - krona.png
 
 icon: icon.png
 
