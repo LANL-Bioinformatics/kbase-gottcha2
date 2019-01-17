@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: GOTTCHA2 - Taxonomic Classifier
+name: GOTTCHA2 - Taxonomic Classifier v2.1.4
 
 tooltip: |
     Taxonomic Classification of Shotgun Metagenomic Read data
@@ -41,4 +41,43 @@ parameters :
 
 
 description : |
-    <p>Performs taxonomic classification using GOTTCHA2</p>
+     <p>This is a Narrative Method for running GOTTCHA2: a novel, gene-independent and signature-based metagenomic taxonomic profiling
+method with significantly smaller false discovery rates (FDR) that is laptop deployable. The algorithm was
+tested and validated on twenty synthetic and mock datasets ranging in community composition and complexity,
+was applied successfully to data generated from spiked environmental and clinical samples, and robustly
+demonstrates superior performance compared with other available tools.
+	 </p>
+	 <hr>
+	 <p>
+	 wrapped for KBase by <a href="mailto:mflynn@lanl.gov">Mark Flynn</a> and <a href="mailto:chienchi@lanl.gov">Chienchi Lo</a>
+	 </p>
+	 <hr>
+	 <h3>Description</h3>
+	 GOTTCHA2 offers two reference databases for classification, which are downloaded from the <a href="https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/">GOTTCHA2 webserver page</a> (last updated 2018-11-10).  The databases are<p>
+	 <ul>
+	 <li> <b>RefSeq Bacteria and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90.
+	 <li> <b>RefSeq Viruses</b>: Virus Nucleotide unique signature sequences built from NCBI RefSeq Release 90.
+     </ul>
+	 <h3>Notes</h3>
+	 <p>
+        GOTTCHAv2 is currently under development in BETA stage and paper in preparation. If you use the tool, you can cite the version 1 below.
+     </p>
+
+publications :
+    -
+        pmid: 25765641
+        display-text : |
+            Tracey Allen K. Freitas, Po-E Li, Matthew B. Scholz and Patrick S. G. Chain (2015) Accurate read-based metagenome characterization using a hierarchical suite of unique signatures, Nucleic Acids Research (DOI: 10.1093/nar/gkv180)
+        link: http://www.ncbi.nlm.nih.gov/pubmed/25765641
+    -
+        display-text: |
+            GOTTCHA2 DBs from:
+        link: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/
+    -
+        display-text: |
+            Krona homepage:
+        link: https://github.com/marbl/Krona/wiki
+    -
+        display-text: |
+            Github for Krona:
+        link: https://github.com/marbl/Krona
