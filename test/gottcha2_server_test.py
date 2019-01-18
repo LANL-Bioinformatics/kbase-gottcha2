@@ -4,6 +4,7 @@ import time
 import unittest
 from configparser import ConfigParser
 import subprocess
+import logging
 
 from gottcha2.gottcha2Impl import gottcha2
 from gottcha2.gottcha2Server import MethodContext
@@ -65,11 +66,14 @@ class gottcha2Test(unittest.TestCase):
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                       'input_refs': ['14672/49/1'],
+                                                       'input_refs': ['22956/3/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna'
                                                        })
-        self.assertEqual(result[0]['fastq_files'],
-                         '/kb/module/work/tmp/e5e32ee1-0090-4308-9722-d23123899ad1.inter.fastq')
+        # report_params = result[0]['report_params']
+        # logging.info(report_params)
+        logging.info(result)
+        # self.assertEqual(report_params['html_links'][0]['name'],
+        #                  'default.krona.html')
 
     def test_gottcha(self):
         # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
