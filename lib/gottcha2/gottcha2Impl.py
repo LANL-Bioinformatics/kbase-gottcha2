@@ -60,7 +60,7 @@ class gottcha2:
         logging.info('Downloading Assembly data as a Fasta file.')
         readsUtil = ReadsUtils(self.callback_url)
         download_reads_output = readsUtil.download_reads({'read_libraries': params['input_refs']})
-        print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
+        # print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
         fastq_files = []
         for key,val in download_reads_output['files'].items():
             if 'fwd' in val['files'] and val['files']['fwd']:
@@ -74,19 +74,24 @@ class gottcha2:
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
                'default', '-d', '/data/' + params['db_type']]
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        print(f'subprocess {p.communicate()}')
-        print(f'cmd {cmd}')
+        # print(f'subprocess {p.communicate()}')
+        # print(f'cmd {cmd}')
 
         # Step 5 - Build a Report and return
         objects_created = []
         output_files = os.listdir(output_dir)
+        output_files_list = []
+        for output in output_files:
+            output_files_list.append({'path': os.path.join(output_dir, output),
+                                      'name': output
+                                      })
 
         output_html_files = {'path': os.path.join(output_dir, 'default.krona.html'),
                              'name': 'default.krona.html'}
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
-                         'file_links': output_files,
+                         'file_links': output_files_list,
                          'html_links': [output_html_files],
                          'direct_html_link_index': 0,
                          'html_window_height': 333}
@@ -94,7 +99,7 @@ class gottcha2:
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
         output = kbase_report_client.create_extended_report(report_params)
-      
+        # output['report_params'] = report_params
         #END run_gottcha2
 
         # At some point might do deeper type checking...
