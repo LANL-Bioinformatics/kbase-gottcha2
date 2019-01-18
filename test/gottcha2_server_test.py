@@ -11,6 +11,7 @@ from gottcha2.gottcha2Server import MethodContext
 from gottcha2.authclient import KBaseAuth as _KBaseAuth
 
 from installed_clients.WorkspaceClient import Workspace
+from installed_clients.ReadsUtilsClient import ReadsUtils
 
 
 class gottcha2Test(unittest.TestCase):
@@ -49,6 +50,17 @@ class gottcha2Test(unittest.TestCase):
         ret = cls.wsClient.create_workspace({'workspace': cls.wsName})  # noqa
 
     @classmethod
+    def prepareTestData(cls):
+
+        filename = os.path.join(cls.scratch, 'test.fastq')
+
+        readsUtil = ReadsUtils.upload_reads(cls.callback_url)
+        # cls.assembly_ref = readsUtil.({
+        #     'file': {'path': filename},
+        #     'workspace_name': cls.wsName,
+        #     'assembly_name': 'TestAssembly'
+        # })
+    @classmethod
     def tearDownClass(cls):
         if hasattr(cls, 'wsName'):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
@@ -69,11 +81,11 @@ class gottcha2Test(unittest.TestCase):
                                                        'input_refs': ['22956/3/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna'
                                                        })
-        report_params = result[0]['report_params']
-        # logging.info(report_params)
-        logging.info(result)
-        self.assertEqual(report_params['html_links'][0]['name'],
-                         'default.krona.html')
+        report_params = result[0]
+        logging.info(f'{report_params}')
+        # logging.info(result)
+        # self.assertEqual(report_params['html_links'][0]['name'],
+        #                  'default.krona.html')
 
     def test_gottcha(self):
         self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))

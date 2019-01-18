@@ -98,8 +98,13 @@ class gottcha2:
 
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
-        output = kbase_report_client.create_extended_report(report_params)
-        output['report_params'] = report_params
+        report_output = kbase_report_client.create_extended_report(report_params)
+        logging.info(report_output)
+        report_output['report_params'] = report_params
+        # Return references which will allow inline display of
+        # the report in the Narrative
+        output = {'report_name': report_output['name'],
+                         'report_ref': report_output['ref']}
         #END run_gottcha2
 
         # At some point might do deeper type checking...
