@@ -69,21 +69,26 @@ class gottcha2Test(unittest.TestCase):
                                                        'input_refs': ['22956/3/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna'
                                                        })
-        # report_params = result[0]['report_params']
+        report_params = result[0]['report_params']
         # logging.info(report_params)
         logging.info(result)
-        # self.assertEqual(report_params['html_links'][0]['name'],
-        #                  'default.krona.html')
+        self.assertEqual(report_params['html_links'][0]['name'],
+                         'default.krona.html')
 
     def test_gottcha(self):
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
         # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
-        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/test.fastq', '-o', '/kb/module/test/data/output', '-p',
-               'testing', '-d', '/data/RefSeq-r90.cg.Viruses.species.fna']
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', '/kb/module/test/data/output', '-p',
+               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(p.communicate())
         self.assertTrue(os.path.exists('/kb/module/test/data/output/testing.summary.tsv'))
         self.assertTrue(os.path.exists('/kb/module/test/data/output/testing.krona.html'))
         with open('/kb/module/test/data/output/testing.summary.tsv', 'r') as fp:
+            logging.info('print summary')
             lines = fp.readlines()
+            for line in lines:
+                logging.info(line)
             self.assertTrue('Zaire ebolavirus' in lines[5])
 
