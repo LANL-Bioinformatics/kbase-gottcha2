@@ -72,7 +72,7 @@ class gottcha2:
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
         os.makedirs(output_dir)
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
-               'default', '-d', '/data/' + params['db_type']]
+               'default', '-d', '/data/gottcha2/RefSeq90/' + params['db_type']]
         print(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(f'subprocess {p.communicate()}')
@@ -99,7 +99,7 @@ class gottcha2:
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
         output = kbase_report_client.create_extended_report(report_params)
-        # output['report_params'] = report_params
+        output['report_params'] = report_params
         #END run_gottcha2
 
         # At some point might do deeper type checking...
