@@ -71,8 +71,8 @@ class gottcha2:
         fastq_files_string = ' '.join(fastq_files)
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
         os.makedirs(output_dir)
-        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-o', output_dir, '-p',
-               'default', '-d', '/data/gottcha2/RefSeq90/' + params['db_type']]
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-t', '4', '-o', output_dir, '-p',
+               'gottcha', '-d', '/data/gottcha2/RefSeq90/' + params['db_type']]
         logging.info(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')
@@ -86,8 +86,8 @@ class gottcha2:
                                       'name': output
                                       })
 
-        output_html_files = {'path': os.path.join(output_dir, 'default.krona.html'),
-                             'name': 'default.krona.html'}
+        output_html_files = {'path': os.path.join(output_dir, 'gottcha2.krona.html'),
+                             'name': 'gottcha2.krona.html'}
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
