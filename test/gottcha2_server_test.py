@@ -47,6 +47,7 @@ class gottcha2Test(unittest.TestCase):
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
         suffix = int(time.time() * 1000)
         cls.wsName = "test_ContigFilter_" + str(suffix)
+        cls.ru = ReadsUtils(os.environ['SDK_CALLBACK_URL'])
         ret = cls.wsClient.create_workspace({'workspace': cls.wsName})  # noqa
 
     @classmethod
@@ -77,8 +78,15 @@ class gottcha2Test(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
+        # read_upload_params = {'fwd_file': os.path.join('data', 'gottcha2', 'RefSeq90', 'test2.fastq'),
+        #                       'sequencing_tech': 'Illumina',
+        #                       'interleaved': 1,
+        #                       'wsname': self.wsName,
+        #                       'name': 'test.fastq'
+        #                       }
+        # reads_ref = self.ru.upload_reads(read_upload_params)['obj_ref']
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                       'input_refs': ['22956/3/1'],
+                                                       'input_refs': ['22852/7/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna'
                                                        })
         report_params = result[0]

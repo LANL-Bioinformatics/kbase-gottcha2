@@ -38,6 +38,35 @@ parameters :
             Database to search against for classification
         long-hint : |
             Database to search against for classification
+    min_coverage :
+        ui-name : |
+            Minimum Coverage
+        short-hint : |
+            Minimum linear coverage
+        long-hint : |
+            Minimum linear coverage to be considered valid in abundance calculation [default: 0.005]
+    min_reads :
+        ui-name : |
+            Minimum Reads
+        short-hint : |
+            Minimum number of reads
+        long-hint : |
+            Minimum number of reads to be considered valid in abundance calculation [default: 3]
+    min_length :
+        ui-name : |
+            Minimum Length
+        short-hint : |
+            Minimum unique length
+        long-hint : |
+            Minimum unique length to be considered valid in abundance calculation [default: 60]
+    min_mean_linear_read_length :
+        ui-name : |
+            Minimum linear Length
+        short-hint : |
+            Minimum mean linear read length
+        long-hint : |
+            Minimum mean linear read length [default: 1]
+
 
 
 description : |

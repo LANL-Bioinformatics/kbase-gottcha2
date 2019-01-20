@@ -72,7 +72,8 @@ class gottcha2:
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
         os.makedirs(output_dir)
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-t', '4', '-o', output_dir, '-p',
-               'gottcha', '-d', '/data/gottcha2/RefSeq90/' + params['db_type']]
+               'gottcha', '-d', '/data/gottcha2/RefSeq90/' + params['db_type'], '-mc', params['min_coverage'], '-mr',
+               params['min_reads'], '-ml', params['min_length'], '-mh', params['min_mean_linear_read_length']]
         logging.info(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')

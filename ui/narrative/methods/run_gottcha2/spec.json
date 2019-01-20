@@ -44,7 +44,55 @@
 						}
 					]
 				}
-		}
+		},
+        {
+            "id": "min_coverage",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "0.005" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "float",
+                "min_float" : 0
+            }
+        },
+        {
+            "id": "min_reads",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "3" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "int",
+                "min_integer" : 0
+            }
+        },
+        {
+            "id": "min_length",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "60" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "int",
+                "min_integer" : 0
+            }
+        },
+        {
+            "id": "min_mean_linear_read_length",
+            "optional": true,
+            "advanced": true,
+            "allow_multiple": false,
+            "default_values": [ "1" ],
+            "field_type": "text",
+            "text_options": {
+                "validate_as": "int",
+                "min_integer" : 0
+            }
+        }
     ],
     "behavior": {
         "service-mapping": {
@@ -67,6 +115,22 @@
 				{
 					"input_parameter": "db_type",
 					"target_property": "db_type"
+				},
+				{
+					"input_parameter": "min_coverage",
+					"target_property": "min_coverage"
+				},
+				{
+					"input_parameter": "min_reads",
+					"target_property": "min_reads"
+				},
+				{
+					"input_parameter": "min_length",
+					"target_property": "min_length"
+				},
+				{
+					"input_parameter": "min_mean_linear_read_length",
+					"target_property": "min_mean_linear_read_length"
 				}
             ],
             "output_mapping": [
