@@ -7,6 +7,7 @@ import shutil
 
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.ReadsUtilsClient import ReadsUtils
+from installed_clients.DataFileUtilClient import DataFileUtil
 #END_HEADER
 
 
@@ -61,6 +62,21 @@ class gottcha2:
         wf.write("</table>")
         wf.write("</body>\n")
 
+    def package_folder(self, folder_path, zip_file_name, zip_file_description):
+        ''' Simple utility for packaging a folder and saving to shock '''
+        if folder_path == self.scratch:
+            raise ValueError ("cannot package scatch itself.  folder path: "+folder_path)
+        elif not folder_path.startswith(self.scratch):
+            raise ValueError ("cannot package folder that is not a subfolder of scratch.  folder path: "+folder_path)
+        dfu = DataFileUtil(self.callback_url)
+        if not os.path.exists(folder_path):
+            raise ValueError ("cannot package folder that doesn't exist: "+folder_path)
+        output = dfu.file_to_shock({'file_path': folder_path,
+                                    'make_handle': 0,
+                                    'pack': 'zip'})
+        return {'shock_id': output['shock_id'],
+                'name': zip_file_name,
+                'label': zip_file_description}
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -150,14 +166,16 @@ class gottcha2:
                              'name': 'gottcha2.datatable.html'},
                              {'path': os.path.join(report_dir, 'gottcha2.tree.svg'),
                              'name': 'gottcha2.tree.svg'}
-                            ]                 
+                            ] 
+        html_zipped = self.package_folder(report_dir, 'index.html', 'index.html')
+
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
                          'file_links': output_files_list,
-                         'html_links': output_html_files,
+                         'html_links': [html_zipped],
                          'direct_html_link_index': 0,
-                         'html_window_height': 420}
+                         'html_window_height': 450}
 
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
