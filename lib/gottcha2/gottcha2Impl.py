@@ -157,7 +157,7 @@ class gottcha2:
                          'file_links': output_files_list,
                          'html_links': output_html_files,
                          'direct_html_link_index': 0,
-                         'html_window_height': 333}
+                         'html_window_height': 420}
 
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
