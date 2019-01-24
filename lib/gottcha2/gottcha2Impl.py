@@ -128,8 +128,8 @@ class gottcha2:
         summary_file_dt = os.path.join(report_dir, 'gottcha2.datatable.html')
 
         self._generate_DataTable(summary_file,summary_file_dt)
-        shutil.copy('/kb/module/lib/gottcha2/src/index.html',os.path.join(report_dir,'index.html'))
-        shutil.copy(os.path.join(output_dir,outprefix+'.krona.html'),os.path.join(report_dir,'gottcha2.krona.html'))
+        shutil.copy2('/kb/module/lib/gottcha2/src/index.html',os.path.join(report_dir,'index.html'))
+        shutil.copy2(os.path.join(output_dir,outprefix+'.krona.html'),os.path.join(report_dir,'gottcha2.krona.html'))
         shutil.move(os.path.join(output_dir,outprefix+'.tree.svg'),os.path.join(report_dir,'gottcha2.tree.svg'))
 
         # Step 5 - Build a Report and return
@@ -145,9 +145,11 @@ class gottcha2:
         output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
                              'name': 'index.html'},
                              {'path': os.path.join(report_dir, 'gottcha2.krona.html'),
-                             'name': 'krona'},
+                             'name': 'gottcha2.krona.html'},
                              {'path': os.path.join(report_dir, 'gottcha2.datatable.html'),
-                             'name': 'datatable'}
+                             'name': 'gottcha2.datatable.html'},
+                             {'path': os.path.join(report_dir, 'gottcha2.tree.svg'),
+                             'name': 'gottcha2.tree.svg'}
                             ]                 
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
@@ -165,7 +167,7 @@ class gottcha2:
         # Return references which will allow inline display of
         # the report in the Narrative
         output = {'report_name': report_output['name'],
-                         'report_ref': report_output['ref']}
+                  'report_ref': report_output['ref']}
         #END run_gottcha2
 
         # At some point might do deeper type checking...
