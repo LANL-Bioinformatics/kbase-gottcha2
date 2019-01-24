@@ -108,13 +108,16 @@ class gottcha2:
         logging.info('Downloading Reads data as a Fastq file.')
         readsUtil = ReadsUtils(self.callback_url)
         download_reads_output = readsUtil.download_reads({'read_libraries': params['input_refs']})
-        # print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
+        print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
         fastq_files = []
+        fastq_files_name = []
         for key,val in download_reads_output['files'].items():
             if 'fwd' in val['files'] and val['files']['fwd']:
                 fastq_files.append(val['files']['fwd'])
+                fastq_files_name.append(val['files']['fwd_name'])
             if 'rev' in val['files'] and val['files']['rev']:
                 fastq_files.append(val['files']['rev'])
+                fastq_files_name.append(val['files']['rev_name'])
         logging.info(f"fastq files {fastq_files}")
         fastq_files_string =  ' '.join(fastq_files)
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
@@ -147,6 +150,7 @@ class gottcha2:
         shutil.copy2('/kb/module/lib/gottcha2/src/index.html',os.path.join(report_dir,'index.html'))
         shutil.copy2(os.path.join(output_dir,outprefix+'.krona.html'),os.path.join(report_dir,'gottcha2.krona.html'))
         shutil.move(os.path.join(output_dir,outprefix+'.tree.svg'),os.path.join(report_dir,'gottcha2.tree.svg'))
+        html_zipped = self.package_folder(report_dir, 'index.html', 'index.html')
 
         # Step 5 - Build a Report and return
         objects_created = []
@@ -157,7 +161,7 @@ class gottcha2:
                 output_files_list.append({'path': os.path.join(output_dir, output),
                                         'name': output
                                         })
-        
+        # not used
         output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
                              'name': 'index.html'},
                              {'path': os.path.join(report_dir, 'gottcha2.krona.html'),
@@ -167,9 +171,8 @@ class gottcha2:
                              {'path': os.path.join(report_dir, 'gottcha2.tree.svg'),
                              'name': 'gottcha2.tree.svg'}
                             ] 
-        html_zipped = self.package_folder(report_dir, 'index.html', 'index.html')
-
-        report_params = {'message': 'GOTTCHA2 run finished',
+        message = 'GOTTCHA2 run finished on %s against %s.' % (','.join(fastq_files_name) , params['db_type'])
+        report_params = {'message': message,
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
                          'file_links': output_files_list,
@@ -180,8 +183,8 @@ class gottcha2:
         # STEP 6: contruct the output to send back
         kbase_report_client = KBaseReport(self.callback_url)
         report_output = kbase_report_client.create_extended_report(report_params)
-        logging.info(report_output)
         report_output['report_params'] = report_params
+        logging.info(report_output)
         # Return references which will allow inline display of
         # the report in the Narrative
         output = {'report_name': report_output['name'],

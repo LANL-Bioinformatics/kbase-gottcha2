@@ -4,10 +4,11 @@
         "mcflynn617", "chienchilo"
     ],
     "contact": "",
+    "visible": true,
     "categories": ["active","communities"],
     "widgets": {
         "input": null,
-        "output": null
+        "output": "no-display"
     },
     "parameters": [ 
         {
