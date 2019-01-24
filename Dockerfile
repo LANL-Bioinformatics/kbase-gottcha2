@@ -9,20 +9,18 @@ MAINTAINER KBase Developer
 # Update
 #RUN apt-get update
 
-# Here we install a python coverage tool and an
-# https library that is out of date in the base image.
-RUN pip install coverage &&\
-    apt-get update && apt-get install -y build-essential zlib1g-dev gawk wget
+# Here we install a python coverage tool and dependency for gottcha2 
+RUN pip install coverage && \
+    apt-get update && apt-get install -y build-essential zlib1g-dev gawk wget bioperl && \
+    apt-get autoremove && apt-get clean
 
-# For minimap2 bin
+# For minimap2 bin and Krona tools
 WORKDIR /kb/module
 RUN \
     git clone https://github.com/lh3/minimap2 && \
     cd minimap2 && make && \
-    cp minimap2 /kb/deployment/bin 
-
-# For Krona Tools
-RUN \
+    cp minimap2 /kb/deployment/bin && \
+    cd ../ && \
     git clone https://github.com/marbl/Krona && \
     cd Krona/KronaTools && \
     ./install.pl --prefix /kb/deployment
@@ -33,7 +31,6 @@ RUN \
 
 # For gottcha2 dbs (rest of db installation to ref data mount in entrypoint.sh init script)
 RUN mkdir -p /data/gottcha2
-
 
 # -----------------------------------------
 

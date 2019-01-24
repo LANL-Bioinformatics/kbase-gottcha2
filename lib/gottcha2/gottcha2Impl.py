@@ -3,6 +3,7 @@
 import logging
 import os
 import subprocess
+import shutil
 
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.ReadsUtilsClient import ReadsUtils
@@ -29,6 +30,37 @@ class gottcha2:
     GIT_COMMIT_HASH = "fdabf07bc36db6a996aed0029d72ec292e1dfa41"
 
     #BEGIN_CLASS_HEADER
+    def _generate_DataTable(self, infile, outfile):
+        f =  open(infile, "r")
+        wf = open(outfile,"w")
+
+        header = f.readline().strip()
+        headerlist = [ x.strip() for x in header.split('\t')]
+
+        wf.write("<head>\n")
+        wf.write("<link rel='stylesheet' type='text/css' href='https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css'>\n")
+        wf.write("<script type='text/javascript' charset='utf8' src='https://code.jquery.com/jquery-3.3.1.js'></script>\n")
+        wf.write("<script type='text/javascript' charset='utf8' src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js'></script>\n")
+        wf.write("</head>\n")
+        wf.write("<body>\n")
+        wf.write("""<script>
+        $(document).ready(function() {
+            $('#gottcha2_result_table').DataTable();
+        } );
+        </script>""")
+        wf.write("<table id='gottcha2_result_table' class='display' style=''>\n")
+        wf.write('<thead><tr>' + ''.join("<th>{0}</th>".format(t) for t in headerlist) + '</tr></thead>\n')
+        wf.write("<tbody>\n")
+        for line in f:
+            if not line.strip():continue 
+            wf.write("<tr>\n")
+            temp = [ x.strip() for x in line.split('\t')]
+            wf.write(''.join("<td>{0}</td>".format(t) for t in temp))
+            wf.write("</tr>\n")
+        wf.write("</tbody>\n")
+        wf.write("</table>")
+        wf.write("</body>\n")
+
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -54,10 +86,10 @@ class gottcha2:
         # return variables are: output
         #BEGIN run_gottcha2
 
-        # Step 2 - Download the input data as a Fasta and
-        # We can use the AssemblyUtils module to download a FASTA file from our Assembly data object.
+        # Step 2 - Download the input data as a FASTQ and
+        # We can use the ReadsUtils module to download a FASTQ file from our Reads data object.
         # The return object gives us the path to the file that was created.
-        logging.info('Downloading Assembly data as a Fasta file.')
+        logging.info('Downloading Reads data as a Fastq file.')
         readsUtil = ReadsUtils(self.callback_url)
         download_reads_output = readsUtil.download_reads({'read_libraries': params['input_refs']})
         # print(f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
@@ -67,33 +99,61 @@ class gottcha2:
                 fastq_files.append(val['files']['fwd'])
             if 'rev' in val['files'] and val['files']['rev']:
                 fastq_files.append(val['files']['rev'])
-        print(f"fastq files {fastq_files}")
-        fastq_files_string = ' '.join(fastq_files)
+        logging.info(f"fastq files {fastq_files}")
+        fastq_files_string =  ' '.join(fastq_files)
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
         os.makedirs(output_dir)
+        ## default options
+        if 'min_coverage' not in params:
+            params['min_coverage'] = '0.005'
+        if 'min_reads' not in params:
+            params['min_reads'] = '3'
+        if 'min_length' not in params:
+            params['min_length'] = '60'
+        if  'min_mean_linear_read_length' not in params:
+            params['min_mean_linear_read_length'] = '1'   
+        outprefix = "gottcha2"
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-t', '4', '-o', output_dir, '-p',
-               'gottcha', '-d', '/data/gottcha2/RefSeq90/' + params['db_type'], '-mc', params['min_coverage'], '-mr',
-               params['min_reads'], '-ml', params['min_length'], '-mh', params['min_mean_linear_read_length']]
+               outprefix, '-d', '/data/gottcha2/RefSeq90/' + params['db_type'], '-c', params['min_coverage'], '-r',
+               params['min_reads'], '-s', params['min_length'], '-m', params['min_mean_linear_read_length']]
         logging.info(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')
+        summary_file = os.path.join(output_dir, outprefix+'.summary.tsv')
+
+        # generate report directory and html file
+        report_dir = os.path.join(output_dir, 'html_report')
+        if not os.path.exists(report_dir):
+            os.makedirs(report_dir)
+        summary_file_dt = os.path.join(report_dir, 'gottcha2.datatable.html')
+
+        self._generate_DataTable(summary_file,summary_file_dt)
+        shutil.copy('/kb/module/lib/gottcha2/src/index.html',os.path.join(report_dir,'index.html'))
+        shutil.copy(os.path.join(output_dir,outprefix+'.krona.html'),os.path.join(report_dir,'gottcha2.krona.html'))
+        shutil.move(os.path.join(output_dir,outprefix+'.tree.svg'),os.path.join(report_dir,'gottcha2.tree.svg'))
 
         # Step 5 - Build a Report and return
         objects_created = []
         output_files = os.listdir(output_dir)
         output_files_list = []
         for output in output_files:
-            output_files_list.append({'path': os.path.join(output_dir, output),
-                                      'name': output
-                                      })
-
-        output_html_files = {'path': os.path.join(output_dir, 'gottcha2.krona.html'),
-                             'name': 'gottcha2.krona.html'}
+            if not os.path.isdir(output):
+                output_files_list.append({'path': os.path.join(output_dir, output),
+                                        'name': output
+                                        })
+        
+        output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
+                             'name': 'index.html'},
+                             {'path': os.path.join(report_dir, 'gottcha2.krona.html'),
+                             'name': 'krona'},
+                             {'path': os.path.join(report_dir, 'gottcha2.datatable.html'),
+                             'name': 'datatable'}
+                            ]                 
         report_params = {'message': 'GOTTCHA2 run finished',
                          'workspace_name': params.get('workspace_name'),
                          'objects_created': objects_created,
                          'file_links': output_files_list,
-                         'html_links': [output_html_files],
+                         'html_links': output_html_files,
                          'direct_html_link_index': 0,
                          'html_window_height': 333}
 
