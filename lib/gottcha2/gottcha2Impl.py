@@ -121,7 +121,8 @@ class gottcha2:
         logging.info(f"fastq files {fastq_files}")
         fastq_files_string =  ' '.join(fastq_files)
         output_dir = os.path.join(self.scratch, 'gottcha2_output')
-        os.makedirs(output_dir)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         ## default options
         if 'min_coverage' not in params:
             params['min_coverage'] = 0.005

@@ -42,6 +42,12 @@
 							"display": "GOTTCHA2 viral db",
 							"id": "RefSeq-r90.cg.Viruses.species.fna",
 							"ui-name": "RefSeq-r90.cg.Viruses.species.fna"
+						},
+						{
+							"value": "JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna",
+							"display": "GOTTCHA2 fungal db",
+							"id": "JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna",
+							"ui-name": "JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna"
 						}
 					]
 				}

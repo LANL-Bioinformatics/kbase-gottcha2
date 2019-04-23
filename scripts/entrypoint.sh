@@ -36,6 +36,12 @@ elif [ "${1}" = "init" ] ; then
   touch RefSeq-r90.cg.Viruses.species.fna
   rm RefSeq-r90.cg.Viruses.species.fna.tar
 
+  echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/misc/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar"
+  wget -q https://edge-dl.lanl.gov/GOTTCHA2/misc/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
+  tar -xf JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
+  touch JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna
+  rm JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
+
    cd /data/gottcha2
 #  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna" ] ; then
   if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" -a -s "/data/gottcha2/RefSeq90/taxdump.tar.gz" ] ; then
