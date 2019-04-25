@@ -23,18 +23,34 @@ elif [ "${1}" = "init" ] ; then
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/taxdump.tar.gz"
   mkdir -p /data/gottcha2/RefSeq90
   cd /data/gottcha2/RefSeq90
-  wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/taxdump.tar.gz
+  if [ -s "taxdump.tar.gz" ];
+  then
+      echo "taxdump.tar.gz existed."
+  else
+      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/taxdump.tar.gz
+  fi
 
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar"
-  wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar
-  tar -xf RefSeq-r90.cg.BacteriaViruses.species.fna.tar
-  touch RefSeq-r90.cg.BacteriaViruses.species.fna
-  rm RefSeq-r90.cg.BacteriaViruses.species.fna.tar
+  if [ -s "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" ]
+  then
+      echo "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi existed"
+  else
+      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar
+      tar -xf RefSeq-r90.cg.BacteriaViruses.species.fna.tar
+      touch RefSeq-r90.cg.BacteriaViruses.species.fna
+      rm RefSeq-r90.cg.BacteriaViruses.species.fna.tar
+  fi 
+
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar"
-  wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar
-  tar -xf RefSeq-r90.cg.Viruses.species.fna.tar
-  touch RefSeq-r90.cg.Viruses.species.fna
-  rm RefSeq-r90.cg.Viruses.species.fna.tar
+  if [ -s "RefSeq-r90.cg.Viruses.species.fna.mmi" ]
+  then
+      echo "RefSeq-r90.cg.Viruses.species.fna.mmi existed"
+  else
+      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar
+      tar -xf RefSeq-r90.cg.Viruses.species.fna.tar
+      touch RefSeq-r90.cg.Viruses.species.fna
+      rm RefSeq-r90.cg.Viruses.species.fna.tar
+  fi
 
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/misc/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar"
   wget -q https://edge-dl.lanl.gov/GOTTCHA2/misc/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
@@ -44,7 +60,7 @@ elif [ "${1}" = "init" ] ; then
 
    cd /data/gottcha2
 #  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna" ] ; then
-  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" -a -s "/data/gottcha2/RefSeq90/taxdump.tar.gz" ] ; then
+  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" -a -s "/data/gottcha2/RefSeq90/taxdump.tar.gz" -a -s "/data/gottcha2/RefSeq90/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.mmi" ] ; then
     echo "DATA DOWNLOADED SUCCESSFULLY"
     touch /data/__READY__
   else
