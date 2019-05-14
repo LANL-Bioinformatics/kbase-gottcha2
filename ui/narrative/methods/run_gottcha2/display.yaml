@@ -1,10 +1,10 @@
 #
 # define display information
 #
-name: GOTTCHA2 - Taxonomic Classifier v2.1.4
+name: Classify Taxonomy of Metagenomic Reads with GOTTCHA2 - v2.1.4
 
 tooltip: |
-    Taxonomic Classification of Shotgun Metagenomic Read data
+    Uses GOTTCHA2 to provide taxonomic classifications of shotgun metagenomic reads data.
 
 screenshots:
     - krona.png
@@ -26,70 +26,50 @@ suggestions:
 parameters :
     input_refs :
         ui-name : |
-            Read library (or Set) objects <font color=red>*</font>
+            Read library or ReadsSet)
         short-hint : |
-            The read library or read library set to examine
-        long-hint  : |
-            The read library or read library set to examine
+            The read library or read library set to examine.
     db_type :
         ui-name : |
             Reference DB
         short-hint : |
-            Database to search against for classification
-        long-hint : |
-            Database to search against for classification
+            Database to search against for classification.
     min_coverage :
         ui-name : |
             Minimum Coverage
         short-hint : |
-            Minimum linear coverage
-        long-hint : |
-            Minimum linear coverage to be considered valid in abundance calculation [default: 0.005]
+            Minimum linear coverage to be considered valid in abundance calculation, as a percentage of the unique genome signatures that is covered during the mapping process (default is 0.005).
     min_reads :
         ui-name : |
             Minimum Reads
         short-hint : |
-            Minimum number of reads
-        long-hint : |
-            Minimum number of reads to be considered valid in abundance calculation [default: 3]
+            Minimum number of reads to be considered valid in abundance calculation (default is 3).
     min_length :
         ui-name : |
             Minimum Length
         short-hint : |
-            Minimum unique length
-        long-hint : |
-            Minimum unique length to be considered valid in abundance calculation [default: 60]
+            Minimum unique length of the reads to be considered valid in abundance calculation (default is 60).
     min_mean_linear_read_length :
         ui-name : |
-            Minimum linear Length
+            Minimum Linear Length
         short-hint : |
-            Minimum mean linear read length
-        long-hint : |
-            Minimum mean linear read length [default: 1]
-
+            Minimum mean linear read length. The ratio of an organism's unique signature linear length to its hit count (default is 1).
 
 
 description : |
-    <p>This is a Narrative Method for running GOTTCHA2 a novel, gene-independent and signature-based metagenomic taxonomic profiling
-    method with significantly smaller false discovery rates (FDR) that is laptop deployable. The algorithm was 
-    tested and validated on twenty synthetic and mock datasets ranging in community composition and complexity, 
-    was applied successfully to data generated from spiked environmental and clinical samples, and robustly demonstrates superior performance compared with other available tools.</p>
-    <hr>
-    <p>
-    wrapped for KBase by <a href="mailto:mflynn@lanl.gov">Mark Flynn</a> and <a href="mailto:chienchi@lanl.gov">Chienchi Lo</a>
+    <p>This is a KBase wrapper for GOTTCHA2, a novel, gene-independent, and signature-based metagenomic taxonomic profiling tool with low false discovery rates (FDR). GOTTCHA2 has been tested and validated on twenty synthetic and mock datasets ranging in community composition and complexity, was applied successfully to data generated from spiked environmental and clinical samples, and robustly demonstrates superior performance compared with other available tools.</p>
+
+    <p>GOTTCHA2 takes either a metagenomic reads library or a reads set as input. Parameters can be set for the reference database and for minimum thresholds for the abundance calculations. GOTTCHA2 uses two reference databases for classification, which can be downloaded from the <a href="https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/">GOTTCHA2 webserver page</a> (last updated 2018-11-10). The databases are:
+      <ul>
+        <li><b>RefSeq Bacteria and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
+        <li><b>RefSeq Viruses</b>: Virus Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
+      </ul>
     </p>
-    <hr>
-    <h3>Description</h3>
-    GOTTCHA2 offers two reference databases for classification, which are downloaded from the <a href="https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/">GOTTCHA2 webserver page</a> (last updated 2018-11-10).  The databases are
-    <ul>
-    <li> <b>RefSeq Bacteria and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90. </li>
-    <li> <b>RefSeq Viruses</b>: Virus Nucleotide unique signature sequences built from NCBI RefSeq Release 90. </li>
-    <li> <b>RefSeq Fungal </b>: Fungal Nucleotide unique signature sequences built from NCBI RefSeq Release 90. </li>
-    </ul>
-    <h3>Notes</h3>
-    <p>
-        GOTTCHAv2 is currently under development in BETA stage and paper in preparation. If you use the tool, you can cite the version 1 below.
-    </p>
+
+    <p>The output of GOTTCHA2 is a report with three modes for analyzing taxonomic abundance. The Result Table lists the taxonomic name and level, relative abundance fraction, and depth of coverage statistics. The Dendrogram sorts the organisms and higher order taxa present into a phylogenetic tree for viewing relationships between organisms within the sample. Finally, the Krona plot is an interactive visualization of the organismal content and relative abundance, allowing the user to focus on abundance within specific clades and generate high quality graphical representations of abundance.</p>
+
+    <p>GOTTCHA2 wrapped for KBase by <a href="mailto:mflynn@lanl.gov">Mark Flynn</a> and <a href="mailto:chienchi@lanl.gov">Chienchi Lo</a> as part of DOE SFA funded codevelopment with KBase.</p>
+
 
 publications :
     -
