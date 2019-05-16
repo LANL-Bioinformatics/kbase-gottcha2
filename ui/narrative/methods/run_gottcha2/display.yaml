@@ -63,6 +63,7 @@ description : |
       <ul>
         <li><b>RefSeq Bacteria and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
         <li><b>RefSeq Viruses</b>: Virus Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
+        <li><b>RefSeq Fungal </b>: Fungal Nucleotide unique signature sequences built from NCBI RefSeq Release 90. </li>
       </ul>
     </p>
 
