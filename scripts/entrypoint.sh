@@ -37,7 +37,7 @@ elif [ "${1}" = "init" ] ; then
   rm JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
 
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar"
-  if [ -s "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" ]
+  if [ -s "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" ] ;
   then
       echo "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi existed"
   else
@@ -48,7 +48,7 @@ elif [ "${1}" = "init" ] ; then
   fi 
 
   echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar"
-  if [ -s "RefSeq-r90.cg.Viruses.species.fna.mmi" ]
+  if [ -s "RefSeq-r90.cg.Viruses.species.fna.mmi" ] ;
   then
       echo "RefSeq-r90.cg.Viruses.species.fna.mmi existed"
   else
