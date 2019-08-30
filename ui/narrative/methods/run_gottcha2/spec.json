@@ -1,5 +1,5 @@
 {
-    "ver": "0.0.1",
+    "ver": "0.0.3",
     "authors": [
         "mcflynn617", "chienchilo"
     ],
@@ -27,21 +27,15 @@
 			"optional": false,
 			"advanced": false,
 			"allow_multiple": false,
-			"default_values": ["RefSeq-r90.cg.BacteriaViruses.species.fna"],
+			"default_values": ["RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna"],
 			"field_type": "dropdown",
 				"dropdown_options": {
 					"options": [
 						{
-							"value": "RefSeq-r90.cg.BacteriaViruses.species.fna",
+							"value": "RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna",
 							"display": "GOTTCHA2 viral and bacterial db",
-							"id": "RefSeq-r90.cg.BacteriaViruses.species.fna",
-							"ui-name": "RefSeq-r90.cg.BacteriaViruses.species.fna"
-						},
-						{
-							"value": "RefSeq-r90.cg.Viruses.species.fna",
-							"display": "GOTTCHA2 viral db",
-							"id": "RefSeq-r90.cg.Viruses.species.fna",
-							"ui-name": "RefSeq-r90.cg.Viruses.species.fna"
+							"id": "RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna",
+							"ui-name": "RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna"
 						},
 						{
 							"value": "JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna",
@@ -89,11 +83,11 @@
             }
         },
         {
-            "id": "min_mean_linear_read_length",
+            "id": "max_zscore",
             "optional": true,
             "advanced": true,
             "allow_multiple": false,
-            "default_values": [ "1" ],
+            "default_values": [ "10" ],
             "field_type": "text",
             "text_options": {
                 "validate_as": "int",
@@ -136,8 +130,8 @@
 					"target_property": "min_length"
 				},
 				{
-					"input_parameter": "min_mean_linear_read_length",
-					"target_property": "min_mean_linear_read_length"
+					"input_parameter": "max_zscore",
+					"target_property": "max_zscore"
 				}
             ],
             "output_mapping": [

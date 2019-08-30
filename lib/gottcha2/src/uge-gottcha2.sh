@@ -19,7 +19,8 @@ OPTIONS:
    -a      minimap2 options
    -c      Minimum linear coverage to be considered valid in abundance calculation [default: 0.005]
    -r      Minimum number of reads to be considered valid in abundance calculation [default: 3]
-   -m      Minimum mean linear read length [default: 1]
+   -m      Minimum mean linear read length [default: 1] (*** disabled, don't use ***)
+   -z      Maximum estimated zscore of depths of mapped region [default: 10] 
    -s      Minimum unique length to be considered valid in abundance calculation [default: 60]
    -h      help
 EOF
@@ -43,9 +44,10 @@ MIN_COV=0.005
 MIN_READS=3
 MIN_LEN=60
 MIN_AVG_LINEAR_RL=1
-DB=/data/gottcah2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna
+MAX_ZSCORE=10
+DB=/data/gottcah2/RefSeq90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna
 
-while getopts "i:o:p:l:d:t:a:c:r:m:s:h" OPTION
+while getopts "i:o:p:l:d:t:a:c:r:m:z:s:h" OPTION
 do
      case $OPTION in
         i) FASTQ=$OPTARG
@@ -68,6 +70,8 @@ do
            ;;
         m) MIN_AVG_LINEAR_RL=$OPTARG
            ;;
+        z) MAX_ZSCORE=$OPTARG
+           ;;
         s) MIN_LEN=$OPTARG
            ;;
         h) usage
@@ -85,14 +89,14 @@ mkdir -p $OUTPATH
 
 set -xe;
 
-gottcha2.py -mc $MIN_COV -mr $MIN_READS -ml $MIN_LEN -mh $MIN_AVG_LINEAR_RL -r $RELABD_COL -m full -i $FASTQ -t $THREADS --outdir $OUTPATH -p $PREFIX --database $DB
+gottcha2.py -mc $MIN_COV -mr $MIN_READS -ml $MIN_LEN -mz $MAX_ZSCORE -r $RELABD_COL -i $FASTQ -t $THREADS --outdir $OUTPATH -p $PREFIX --database $DB
 
 awk -F\\t '{if($NF=="" || $NF=="NOTE"){print $_}}' $OUTPATH/$PREFIX.full.tsv | cut -f -10 > $OUTPATH/$PREFIX.summary.tsv
 awk -F\\t '{if(NR==1){out=$1"\t"$2"\tROLLUP\tASSIGNED"; { for(i=3;i<=NF;i++){out=out"\t"$i}}; print out;}}' $OUTPATH/$PREFIX.summary.tsv > $OUTPATH/$PREFIX.out.list
 awk -F\\t '{if(NR>1){out=$1"\t"$2"\t"$4"\t"; { for(i=3;i<=NF;i++){out=out"\t"$i}}; print out;}}' $OUTPATH/$PREFIX.summary.tsv >> $OUTPATH/$PREFIX.out.list
 
-gottcha2.py -r $RELABD_COL --database $DB -s $OUTPATH/$PREFIX.gottcha_*.sam -m lineage -c > $OUTPATH/$PREFIX.out.tab_tree
-
+#gottcha2.py -r $RELABD_COL --database $DB -s $OUTPATH/$PREFIX.gottcha_*.sam -m lineage -c > $OUTPATH/$PREFIX.out.tab_tree
+cp $OUTPATH/$PREFIX.lineage.tsv $OUTPATH/$PREFIX.out.tab_tree
 #generate KRONA chart
 ktImportText  $OUTPATH/$PREFIX.out.tab_tree -o $OUTPATH/$PREFIX.krona.html
 

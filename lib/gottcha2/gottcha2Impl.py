@@ -130,8 +130,8 @@ class gottcha2:
             params['min_reads'] = 3
         if 'min_length' not in params:
             params['min_length'] = 60
-        if  'min_mean_linear_read_length' not in params:
-            params['min_mean_linear_read_length'] = 1  
+        if  'max_zscore' not in params:
+            params['max_zscore'] = 10  
         outprefix = "gottcha2"
         cmd0 = ["ls", "-al", '/data/gottcha2/RefSeq90/']
         logging.info(f'cmd {cmd0}')
@@ -140,7 +140,7 @@ class gottcha2:
 
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-t', '4', '-o', output_dir, '-p',
                outprefix, '-d', '/data/gottcha2/RefSeq90/' + params['db_type'], '-c', str(params['min_coverage']), '-r',
-               str(params['min_reads']), '-s', str(params['min_length']), '-m', str(params['min_mean_linear_read_length'])]
+               str(params['min_reads']), '-s', str(params['min_length']), '-z', str(params['max_zscore'])]
         logging.info(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')

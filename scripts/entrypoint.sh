@@ -36,31 +36,20 @@ elif [ "${1}" = "init" ] ; then
   touch JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna
   rm JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.tar
 
-  echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar"
-  if [ -s "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" ] ;
+  echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.tar"
+  if [ -s "RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.mmi" ] ;
   then
-      echo "RefSeq-r90.cg.BacteriaViruses.species.fna.mmi existed"
+      echo "RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.mmi existed"
   else
-      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaViruses.species.fna.tar
-      tar -xf RefSeq-r90.cg.BacteriaViruses.species.fna.tar
-      touch RefSeq-r90.cg.BacteriaViruses.species.fna
-      rm RefSeq-r90.cg.BacteriaViruses.species.fna.tar
+      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.tar
+      tar -xf RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.tar
+      touch RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna
+      rm RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.tar
   fi 
 
-  echo "downloading: https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar"
-  if [ -s "RefSeq-r90.cg.Viruses.species.fna.mmi" ] ;
-  then
-      echo "RefSeq-r90.cg.Viruses.species.fna.mmi existed"
-  else
-      wget -q https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/RefSeq-r90.cg.Viruses.species.fna.tar
-      tar -xf RefSeq-r90.cg.Viruses.species.fna.tar
-      touch RefSeq-r90.cg.Viruses.species.fna
-      rm RefSeq-r90.cg.Viruses.species.fna.tar
-  fi
-
-   cd /data/gottcha2
+  cd /data/gottcha2
 #  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna" ] ; then
-  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaViruses.species.fna.mmi" -a -s "/data/gottcha2/RefSeq90/taxdump.tar.gz" -a -s "/data/gottcha2/RefSeq90/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.stats" ] ; then
+  if [ -s "/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.mmi" -a -s "/data/gottcha2/RefSeq90/taxdump.tar.gz" -a -s "/data/gottcha2/RefSeq90/JGI_fungi.Refseq90_bact_cg.FUNGI.species.fna.stats" ] ; then
     echo "DATA DOWNLOADED SUCCESSFULLY"
     touch /data/__READY__
   else

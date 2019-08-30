@@ -10,7 +10,7 @@ MAINTAINER KBase Developer
 #RUN apt-get update
 
 # Here we install a python coverage tool and dependency for gottcha2 
-RUN pip install coverage && \
+RUN pip install coverage pandas && \
     apt-get update && apt-get install -y build-essential zlib1g-dev gawk wget bioperl && \
     apt-get autoremove && apt-get clean
 

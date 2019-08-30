@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Classify Taxonomy of Metagenomic Reads with GOTTCHA2 - v2.1.4
+name: Classify Taxonomy of Metagenomic Reads with GOTTCHA2 - v2.1.5
 
 tooltip: |
     Uses GOTTCHA2 to provide taxonomic classifications of shotgun metagenomic reads data.
@@ -27,7 +27,7 @@ parameters :
     input_refs :
         ui-name : |
             Read library or ReadsSet)
-        short-hint : |
+        short-hint : 
             The read library or read library set to examine.
     db_type :
         ui-name : |
@@ -49,11 +49,11 @@ parameters :
             Minimum Length
         short-hint : |
             Minimum unique length of the reads to be considered valid in abundance calculation (default is 60).
-    min_mean_linear_read_length :
+    max_zscore :
         ui-name : |
-            Minimum Linear Length
+            Maximum Zscore
         short-hint : |
-            Minimum mean linear read length. The ratio of an organism's unique signature linear length to its hit count (default is 1).
+            Maximum estimated zscore of depths of mapped region (default is 10).
 
 
 description : |
@@ -61,8 +61,7 @@ description : |
 
     <p>GOTTCHA2 takes either a metagenomic reads library or a reads set as input. Parameters can be set for the reference database and for minimum thresholds for the abundance calculations. GOTTCHA2 uses two reference databases for classification, which can be downloaded from the <a href="https://edge-dl.lanl.gov/GOTTCHA2/RefSeq-Release90/">GOTTCHA2 webserver page</a> (last updated 2018-11-10). The databases are:
       <ul>
-        <li><b>RefSeq Bacteria and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
-        <li><b>RefSeq Viruses</b>: Virus Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
+        <li><b>RefSeq Bacteria, Archaea and Viruses</b>: Nucleotide unique signature sequences built from NCBI RefSeq Release 90.</li>
         <li><b>RefSeq Fungal </b>: Fungal Nucleotide unique signature sequences built from NCBI RefSeq Release 90. </li>
       </ul>
     </p>
