@@ -1,7 +1,7 @@
 #
 # define display information
 #
-name: Classify Taxonomy of Metagenomic Reads with GOTTCHA2 - v2.1.5
+name: Classify Taxonomy of Metagenomic Reads with GOTTCHA2 - v2.1.6
 
 tooltip: |
     Uses GOTTCHA2 to provide taxonomic classifications of shotgun metagenomic reads data.
