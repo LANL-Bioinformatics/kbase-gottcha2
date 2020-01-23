@@ -145,6 +145,11 @@ class gottcha2:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')
         summary_file = os.path.join(output_dir, outprefix+'.summary.tsv')
+        
+        if os.stat(summary_file).st_size == 0:
+            msg= 'There is no taxonomy classification assignment against' + params['db_type']
+            logging.error(msg)
+            raise ValueError(msg)
 
         # generate report directory and html file
         report_dir = os.path.join(output_dir, 'html_report')
