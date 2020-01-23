@@ -103,6 +103,7 @@ ktImportText  $OUTPATH/$PREFIX.out.tab_tree -o $OUTPATH/$PREFIX.krona.html
 
 #generate Tree Dendrogram
 phylo_dot_plot.pl -i $OUTPATH/$PREFIX.out.tab_tree -p $OUTPATH/$PREFIX.tree -t 'GOTTCHA2'
+touch $OUTPATH/$PREFIX.tree.svg
 
 set +xe;
 echo "";

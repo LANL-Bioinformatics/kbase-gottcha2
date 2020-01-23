@@ -145,8 +145,9 @@ class gottcha2:
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')
         summary_file = os.path.join(output_dir, outprefix+'.summary.tsv')
+        lineage_file = os.path.join(output_dir, outprefix+'.lineage.tsv')
         
-        if os.stat(summary_file).st_size == 0:
+        if os.stat(lineage_file).st_size == 0:
             msg= 'There is no taxonomy classification assignment against' + params['db_type']
             logging.error(msg)
             raise ValueError(msg)
@@ -160,7 +161,8 @@ class gottcha2:
         self._generate_DataTable(summary_file,summary_file_dt)
         shutil.copy2('/kb/module/lib/gottcha2/src/index.html',os.path.join(report_dir,'index.html'))
         shutil.copy2(os.path.join(output_dir,outprefix+'.krona.html'),os.path.join(report_dir,'gottcha2.krona.html'))
-        shutil.move(os.path.join(output_dir,outprefix+'.tree.svg'),os.path.join(report_dir,'gottcha2.tree.svg'))
+        if os.path.exists(os.path.join(output_dir,outprefix+'.tree.svg')):
+            shutil.move(os.path.join(output_dir,outprefix+'.tree.svg'),os.path.join(report_dir,'gottcha2.tree.svg'))
         html_zipped = self.package_folder(report_dir, 'index.html', 'index.html')
 
         # Step 5 - Build a Report and return
