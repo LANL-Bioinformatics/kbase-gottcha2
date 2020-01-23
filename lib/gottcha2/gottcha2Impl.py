@@ -148,7 +148,7 @@ class gottcha2:
         lineage_file = os.path.join(output_dir, outprefix+'.lineage.tsv')
         
         if os.stat(lineage_file).st_size == 0:
-            msg= 'There is no taxonomy classification assignment against' + params['db_type']
+            msg= 'There is no taxonomy classification assignment against ' + params['db_type'] + ' reference DB. You may try another reference DB.' 
             logging.error(msg)
             raise ValueError(msg)
 
