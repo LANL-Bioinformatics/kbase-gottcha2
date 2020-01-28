@@ -26,7 +26,7 @@ suggestions:
 parameters :
     input_refs :
         ui-name : |
-            Read library or ReadsSet)
+            Read library or ReadsSet
         short-hint : 
             The read library or read library set to examine.
     db_type :
