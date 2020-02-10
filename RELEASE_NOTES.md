@@ -1,7 +1,7 @@
 # gottcha2 release notes
 =========================================
 
-0.0.4
+0.0.5
 -----
 * update to GOTTCHA2 version 2.1.6 and avoid 0 assignment error
 * update to GOTTCHA2 to version 2.1.5 and corresponding databases
