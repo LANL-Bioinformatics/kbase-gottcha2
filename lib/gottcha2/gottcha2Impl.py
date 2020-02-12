@@ -26,7 +26,7 @@ class gottcha2:
     # state. A method could easily clobber the state set by another while
     # the latter method is running.
     ######################################### noqa
-    VERSION = "0.0.1"
+    VERSION = "0.0.6"
     GIT_URL = "https://github.com/LANL-Bioinformatics/kbase-gottcha2.git"
     GIT_COMMIT_HASH = "fdabf07bc36db6a996aed0029d72ec292e1dfa41"
 

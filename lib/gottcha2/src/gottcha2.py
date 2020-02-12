@@ -566,12 +566,12 @@ def readMapping(reads, db, threads, mm_penalty, presetx, samfile, logfile, nanop
     """
     input_file = " ".join(reads)
     
-    sr_opts = f"-x {presetx} --second=no -k24 -A1 -B{mm_penalty} -O30 -E30 -a -N1 -n1 -p1 -m24 -s30"
+    sr_opts = f"-x {presetx} --second=no -k24 -A1 -B{mm_penalty} -K100M -O30 -E30 -a -N1 -n1 -p1 -m24 -s30"
     if nanopore:
         sr_opts = f"-x {presetx} --second=no -a"
 
     bash_cmd   = "set -o pipefail; set -x;"
-    mm2_cmd    = f"minimap2 {sr_opts} -t{threads} {db}.mmi {input_file}"
+    mm2_cmd    = f"cat {input_file} | minimap2 {sr_opts} -t{threads} {db}.mmi - "
     filter_cmd = "gawk -F\\\\t '!/^@/ && !and($2,4) && !and($2,2048) { if(r!=$1.and($2,64)){r=$1.and($2,64); s=$14} if($14>=s){print} }'"
     cmd        = "%s %s 2>> %s | %s > %s"%(bash_cmd, mm2_cmd, logfile, filter_cmd, samfile)
 
