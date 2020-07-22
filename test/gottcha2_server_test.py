@@ -86,7 +86,7 @@ class gottcha2Test(unittest.TestCase):
         #                       }
         # reads_ref = self.ru.upload_reads(read_upload_params)['obj_ref']
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                       'input_refs': ['22852/10/1'],
+                                                       'input_refs': '22852/10/1',
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                        'min_coverage': 0.005
                                                        })
