@@ -87,7 +87,7 @@ class gottcha2Test(unittest.TestCase):
         # reads_ref = self.ru.upload_reads(read_upload_params)['obj_ref']
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
                                                        'input_refs': ['22852/10/1'],
-                                                       'db_type': 'RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna',
+                                                       'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                        'min_coverage': 0.005
                                                        })
         report_params = result[0]
@@ -98,11 +98,11 @@ class gottcha2Test(unittest.TestCase):
 
     def test_gottcha(self):
         self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
-        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna.mmi'))
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
         output_dir = os.path.join(self.scratch, 'test_gottcha')
         # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
-               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.BacteriaArchaeaViruses.species.fna']
+               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         print(p.communicate())
         self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
