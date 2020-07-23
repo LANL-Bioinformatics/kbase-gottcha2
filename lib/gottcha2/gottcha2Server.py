@@ -342,6 +342,10 @@ class Application(object):
                              name='gottcha2.run_gottcha2',
                              types=[dict])
         self.method_authentication['gottcha2.run_gottcha2'] = 'required'  # noqa
+        self.rpc_service.add(impl_gottcha2.exec_gottcha2,
+                             name='gottcha2.exec_gottcha2',
+                             types=[dict])
+        self.method_authentication['gottcha2.exec_gottcha2'] = 'required'  # noqa
         self.rpc_service.add(impl_gottcha2.status,
                              name='gottcha2.status',
                              types=[dict])
