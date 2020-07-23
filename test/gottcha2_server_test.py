@@ -87,7 +87,7 @@ class gottcha2Test(unittest.TestCase):
 
         # Test ReadsSet
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                          'input_refs': '22956/25/1',
+                                                          'input_refs': ['22956/25/1'],
                                                           'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                           'min_coverage': 0.005
                                                           })
@@ -95,7 +95,7 @@ class gottcha2Test(unittest.TestCase):
         logging.info(f'{report_params}')
 
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                       'input_refs': '22852/10/1',
+                                                       'input_refs': ['22852/10/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                        'min_coverage': 0.005
                                                        })
@@ -116,22 +116,30 @@ class gottcha2Test(unittest.TestCase):
                  ]
         [self.assertTrue(p in file_paths) for p in paths]
 
-
-    # def test_gottcha(self):
-    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
-    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
-    #     output_dir = os.path.join(self.scratch, 'test_gottcha')
-    #     # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
-    #     cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
-    #            'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
-    #     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    #     print(p.communicate())
-    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
-    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
-    #     with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
-    #         logging.info('print summary')
-    #         lines = fp.readlines()
-    #         for line in lines:
-    #             logging.info(line)
-    #         self.assertTrue('Zaire ebolavirus' in lines[7])
+        result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
+                                                          'input_refs': ['22852/10/1'],
+                                                          'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
+                                                          'min_coverage': 0.005
+                                                          })
+        report_params = result[0]['report_params']
+        logging.info(f'{report_params}')
+        self.assertEqual(report_params['html_links'][0]['name'],
+                         'index.html')
+    def test_gottcha(self):
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
+        output_dir = os.path.join(self.scratch, 'test_gottcha')
+        # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
+               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(p.communicate())
+        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
+        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
+        with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
+            logging.info('print summary')
+            lines = fp.readlines()
+            for line in lines:
+                logging.info(line)
+            self.assertTrue('Zaire ebolavirus' in lines[7])
 

@@ -300,7 +300,7 @@ class gottcha2:
         # Determine whether read library or read set is input object
         #
         try:
-            input_reads_obj_info = wsClient.get_object_info([{'ref': params['input_refs']}], 1)[0]
+            input_reads_obj_info = wsClient.get_object_info([{'ref': params['input_refs'][0]}], 1)[0]
             input_reads_obj_type = input_reads_obj_info[TYPE_I]
             input_reads_obj_type = re.sub('-[0-9]+\.[0-9]+$', "", input_reads_obj_type)  # remove trailing version
             # input_reads_obj_version = input_reads_obj_info[VERSION_I]  # this is object version, not type version
@@ -330,11 +330,12 @@ class gottcha2:
                 setAPI_Client = SetAPI(url=self.serviceWizardURL, token=ctx['token'],
                                        service_ver='beta')  # for dynamic service
                 input_readsSet_obj = setAPI_Client.get_reads_set_v1(
-                    {'ref': params['input_refs'], 'include_item_info': 1})
+                    {'ref': params['input_refs'][0], 'include_item_info': 1})
 
             except Exception as e:
                 raise ValueError('SetAPI FAILURE: Unable to get read library set object from workspace: (' + str(
                     params['input_refs']) + ")\n" + str(e))
+            logging.info(f"reads set items {input_readsSet_obj['data']['items']}")
             for readsLibrary_obj in input_readsSet_obj['data']['items']:
                 readsSet_ref_list.append(readsLibrary_obj['ref'])
                 readsSet_names_list.append(readsLibrary_obj['info'][NAME_I])
@@ -354,8 +355,8 @@ class gottcha2:
                 elif read_type == None:
                     read_type = this_read_type
         else:
-            readsSet_ref_list = [params['input_refs']]
-            readsSet_names_list = [input_reads_obj_info[NAME_I]]
+            readsSet_ref_list = params['input_refs']
+            readsSet_names_list = input_reads_obj_info[NAME_I]
 
         for reads_item_i,input_reads_library_ref in enumerate(readsSet_ref_list):
             params['input_ref'] = input_reads_library_ref
