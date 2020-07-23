@@ -93,7 +93,7 @@ class gottcha2:
 
     def exec_gottcha2(self, ctx, params):
         console = []
-        self.log(console, 'Running Trimmomatic with parameters: ')
+        self.log(console, 'Running GOTTCHA2 with parameters: ')
         self.log(console, "\n"+pformat(params))
         report = ''
         retVal = dict()
@@ -128,7 +128,7 @@ class gottcha2:
             raise ValueError(
                 "Input reads of type: '" + input_reads_obj_type + "'.  Must be one of " + ", ".join(acceptable_types))
 
-        # Confirm user is paying attention (matters because Trimmomatic params are very different for PairedEndLibary and SingleEndLibrary
+        # Ensure that all libraries in ReadsSet are either single-ended or pair ended
         #
         if params['read_type'] == 'PE' and not input_reads_obj_type in PE_types:
             raise ValueError("read_type set to 'Paired End' but object is SingleEndLibrary")
@@ -147,15 +147,7 @@ class gottcha2:
             raise ValueError('Unable to get read library object from workspace: (' + str(
                 params['input_ref']) + ")\n" + str(e))
 
-        if params['read_type'] == 'PE':
-            # Download reads Libs to FASTQ files
-            input_fwd_file_path = download_reads_output['files'][params['input_ref']]['files']['fwd']
-            input_rev_file_path = download_reads_output['files'][params['input_ref']]['files']['rev']
-
-
-        # readsUtil = ReadsUtils(self.callback_url)
-        # download_reads_output = readsUtil.download_reads({'read_libraries': params['input_refs']})
-        print(
+        logging.info(
             f"Input parameters {params['input_refs']}, {params['db_type']} download_reads_output {download_reads_output}")
         fastq_files = []
         fastq_files_name = []
@@ -181,11 +173,7 @@ class gottcha2:
         if 'max_zscore' not in params:
             params['max_zscore'] = 10
         outprefix = "gottcha2"
-        cmd0 = ["ls", "-al", '/data/gottcha2/RefSeq90/']
-        logging.info(f'cmd {cmd0}')
-        pls = subprocess.Popen(cmd0, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        logging.info(f'subprocess {pls.communicate()}')
-
+        
         cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', fastq_files_string, '-t', '4', '-o', output_dir,
                '-p',
                outprefix, '-d', '/data/gottcha2/RefSeq90/' + params['db_type'], '-c', str(params['min_coverage']), '-r',
@@ -249,8 +237,14 @@ class gottcha2:
         kbase_report_client = KBaseReport(self.callback_url)
         report_output = kbase_report_client.create_extended_report(report_params)
         report_output['report_params'] = report_params
-        logging.info(report_output)
-        return report_output
+        logging.info(f'report output {report_output}')
+
+        # Return references which will allow inline display of
+        # the report in the Narrative
+        output = {'report_name': report_output['name'],
+                  'report_ref': report_output['ref'],
+                  'report_params': report_output['report_params']}
+        return output
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -367,17 +361,8 @@ class gottcha2:
             params['input_ref'] = input_reads_library_ref
             params['read_type']= read_type
 
-            report = ''
-            report += "RUNNING GOTTCHA2 ON LIBRARY: " + str(input_reads_library_ref) + " " + str(
-            readsSet_names_list[reads_item_i]) + "\n"
-            report += "-----------------------------------------------------------------------------------\n\n"
-            report_output = self.exec_gottcha2(ctx, params)
+            output = self.exec_gottcha2(ctx, params)
 
-
-            # Return references which will allow inline display of
-            # the report in the Narrative
-            output = {'report_name': report_output['name'],
-                      'report_ref': report_output['ref']}
         #END run_gottcha2
 
         # At some point might do deeper type checking...

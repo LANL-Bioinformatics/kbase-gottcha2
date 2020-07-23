@@ -46,7 +46,7 @@ class gottcha2Test(unittest.TestCase):
         cls.scratch = cls.cfg['scratch']
         cls.callback_url = os.environ['SDK_CALLBACK_URL']
         suffix = int(time.time() * 1000)
-        cls.wsName = "test_ContigFilter_" + str(suffix)
+        cls.wsName = "test_gottcha2_" + str(suffix)
         cls.ru = ReadsUtils(os.environ['SDK_CALLBACK_URL'])
         ret = cls.wsClient.create_workspace({'workspace': cls.wsName})  # noqa
 
@@ -67,6 +67,12 @@ class gottcha2Test(unittest.TestCase):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
             print('Test workspace was deleted')
 
+    @staticmethod
+    def get_file_paths(report_params):
+        file_paths = []
+        [file_paths.append(f['path']) for f in report_params['file_links']]
+        return file_paths
+
     # NOTE: According to Python unittest naming rules test method names should start from 'test'. # noqa
     def test_params(self):
         # Prepare test objects in workspace if needed using
@@ -78,39 +84,54 @@ class gottcha2Test(unittest.TestCase):
         #
         # Check returned data with
         # self.assertEqual(ret[...], ...) or other unittest methods
-        # read_upload_params = {'fwd_file': os.path.join('data', 'gottcha2', 'RefSeq90', 'test2.fastq'),
-        #                       'sequencing_tech': 'Illumina',
-        #                       'interleaved': 1,
-        #                       'wsname': self.wsName,
-        #                       'name': 'test.fastq'
-        #                       }
-        # reads_ref = self.ru.upload_reads(read_upload_params)['obj_ref']
+
+        # Test ReadsSet
+        result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
+                                                          'input_refs': '22956/25/1',
+                                                          'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
+                                                          'min_coverage': 0.005
+                                                          })
+        report_params = result[0]['report_params']
+        logging.info(f'{report_params}')
+
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
                                                        'input_refs': '22852/10/1',
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                        'min_coverage': 0.005
                                                        })
-        report_params = result[0]
+        report_params = result[0]['report_params']
         logging.info(f'{report_params}')
-        # logging.info(result)
-        # self.assertEqual(report_params['html_links'][0]['name'],
-        #                  'default.krona.html')
+        self.assertEqual(report_params['html_links'][0]['name'],
+                         'index.html')
+        file_paths = self.get_file_paths(report_params)
+        logging.info(f'file_paths {file_paths}')
+        paths = ['/kb/module/work/tmp/gottcha2_output/gottcha2.krona.html',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.tsv',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.lineage.tsv',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.gottcha_species.log',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.out.tab_tree',
+                 '/kb/module/work/tmp/gottcha2_output/html_report',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.out.list',
+                 '/kb/module/work/tmp/gottcha2_output/gottcha2.full.tsv'
+                 ]
+        [self.assertTrue(p in file_paths) for p in paths]
 
-    def test_gottcha(self):
-        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
-        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
-        output_dir = os.path.join(self.scratch, 'test_gottcha')
-        # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
-        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
-               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        print(p.communicate())
-        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
-        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
-        with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
-            logging.info('print summary')
-            lines = fp.readlines()
-            for line in lines:
-                logging.info(line)
-            self.assertTrue('Zaire ebolavirus' in lines[7])
+
+    # def test_gottcha(self):
+    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
+    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
+    #     output_dir = os.path.join(self.scratch, 'test_gottcha')
+    #     # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
+    #     cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
+    #            'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
+    #     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    #     print(p.communicate())
+    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
+    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
+    #     with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
+    #         logging.info('print summary')
+    #         lines = fp.readlines()
+    #         for line in lines:
+    #             logging.info(line)
+    #         self.assertTrue('Zaire ebolavirus' in lines[7])
 
