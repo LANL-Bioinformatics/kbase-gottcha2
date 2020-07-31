@@ -14,6 +14,10 @@ RUN pip install coverage pandas && \
     apt-get update && apt-get install -y build-essential zlib1g-dev gawk wget bioperl && \
     apt-get autoremove && apt-get clean
 
+RUN mkdir -p /kb/data
+COPY ./data/index_start.txt /kb/data/
+COPY ./data/index_end.txt /kb/data/
+
 # For minimap2 bin and Krona tools
 WORKDIR /kb/module
 RUN \
