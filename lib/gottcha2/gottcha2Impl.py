@@ -75,7 +75,7 @@ class gottcha2:
         first_file = ""
         html_string = ""
         html_count = 0
-        with open('/data/gottcha2/index_start.txt', 'r') as start_file:
+        with open('/kb/data/index_start.txt', 'r') as start_file:
             html_string = start_file.read()
 
         # Make HTML folder
@@ -94,7 +94,7 @@ class gottcha2:
         html_string += "        <iframe id=\"content\" "
         html_string += "style=\"width: 100%; border: none; \" src=\""+first_file+"\"></iframe>\n    </div>"
 
-        with open('/data/gottcha2/index_end.txt', 'r') as end_file:
+        with open('/kb/data/index_end.txt', 'r') as end_file:
             html_string += end_file.read()
         assert os.path.exists(html_folder)
         with open(os.path.join(html_folder, "index.html"), 'w') as index_file:
