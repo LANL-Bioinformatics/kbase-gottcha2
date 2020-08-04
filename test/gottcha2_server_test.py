@@ -5,6 +5,7 @@ import unittest
 from configparser import ConfigParser
 import subprocess
 import logging
+from pprint import pprint, pformat
 
 from gottcha2.gottcha2Impl import gottcha2
 from gottcha2.gottcha2Server import MethodContext
@@ -67,6 +68,9 @@ class gottcha2Test(unittest.TestCase):
             cls.wsClient.delete_workspace({'workspace': cls.wsName})
             print('Test workspace was deleted')
 
+    def getWsClient(self):
+        return self.__class__.wsClient
+
     @staticmethod
     def get_file_paths(report_params):
         file_paths = []
@@ -87,51 +91,45 @@ class gottcha2Test(unittest.TestCase):
 
         # Test ReadsSet
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                          'input_refs': '22956/25/1',
+                                                          'input_refs': ['22956/25/1'],
                                                           'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                           'min_coverage': 0.005
                                                           })
-        report_params = result[0]['report_params']
-        logging.info(f'{report_params}')
-
+        # report_params = result[0]['report_params']
+        # logging.info(f'{report_params}')
+        # logging.info(f'{result}')
         result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
-                                                       'input_refs': '22852/10/1',
+                                                       'input_refs': ['22852/10/1'],
                                                        'db_type': 'RefSeq-r90.cg.Viruses.species.fna',
                                                        'min_coverage': 0.005
-                                                       })
-        report_params = result[0]['report_params']
-        logging.info(f'{report_params}')
-        self.assertEqual(report_params['html_links'][0]['name'],
-                         'index.html')
-        file_paths = self.get_file_paths(report_params)
-        logging.info(f'file_paths {file_paths}')
-        paths = ['/kb/module/work/tmp/gottcha2_output/gottcha2.krona.html',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.tsv',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.lineage.tsv',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.gottcha_species.log',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.out.tab_tree',
-                 '/kb/module/work/tmp/gottcha2_output/html_report',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.out.list',
-                 '/kb/module/work/tmp/gottcha2_output/gottcha2.full.tsv'
-                 ]
-        [self.assertTrue(p in file_paths) for p in paths]
+                                                       })[0]
+        # logging.info(f'{result}')
+        self.assertIn('report_name', result)
+        self.assertIn('report_ref', result)
+        report = self.getWsClient().get_objects2({'objects': [{'ref': result['report_ref']}]})['data'][0]['data']
+        pprint(report)
+        self.assertIn('direct_html', report)
+        self.assertIn('file_links', report)
+        self.assertIn('html_links', report)
+        self.assertIn('objects_created', report)
+        self.assertIn('text_message', report)
 
 
-    # def test_gottcha(self):
-    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
-    #     self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
-    #     output_dir = os.path.join(self.scratch, 'test_gottcha')
-    #     # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
-    #     cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
-    #            'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
-    #     p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    #     print(p.communicate())
-    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
-    #     self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
-    #     with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
-    #         logging.info('print summary')
-    #         lines = fp.readlines()
-    #         for line in lines:
-    #             logging.info(line)
-    #         self.assertTrue('Zaire ebolavirus' in lines[7])
+    def test_gottcha(self):
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90'))
+        self.assertTrue(os.path.exists('/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna.mmi'))
+        output_dir = os.path.join(self.scratch, 'test_gottcha')
+        # 'sh lib/gottcha2/src/uge-gottcha2.sh -i test/data/test.fastq -o test/data/output -p testing -d test/data/RefSeq-r90.cg.Viruses.species.fna'
+        cmd = ['/kb/module/lib/gottcha2/src/uge-gottcha2.sh', '-i', '/data/gottcha2/RefSeq90/test.fastq', '-o', output_dir, '-p',
+               'testing', '-d', '/data/gottcha2/RefSeq90/RefSeq-r90.cg.Viruses.species.fna']
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        print(p.communicate())
+        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.summary.tsv')))
+        self.assertTrue(os.path.exists(os.path.join(output_dir, 'testing.krona.html')))
+        with open(os.path.join(output_dir, 'testing.summary.tsv'), 'r') as fp:
+            logging.info('print summary')
+            lines = fp.readlines()
+            for line in lines:
+                logging.info(line)
+            self.assertTrue('Zaire ebolavirus' in lines[7])
 
