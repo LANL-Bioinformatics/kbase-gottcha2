@@ -10,6 +10,7 @@ import requests
 from pprint import pprint, pformat
 from datetime import datetime
 import re
+from glob import glob
 
 from installed_clients.KBaseReportClient import KBaseReport
 from installed_clients.ReadsUtilsClient import ReadsUtils
@@ -408,14 +409,16 @@ class gottcha2:
 
         # Step 5 - Build a Report and return
         objects_created = []
-        output_files = os.listdir(report_dir)
+        output_files = glob(report_dir + f'/{label}_*')
+        # logging.info(f'glob output_files {output_files}')
         output_files_list = []
         for file in output_files:
             if not os.path.isdir(file):
-                logging.info(f'file {file}')
-                output_files_list.append({'path': os.path.join(report_dir, file),
-                                          'name': file
+                # logging.info(f'file {file}')
+                output_files_list.append({'path': file,
+                                          'name': file.split('/')[-1]
                                           })
+        logging.info(f'output_files_list {output_files_list}')
         # not used
         output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
                               'name': 'index.html'},
