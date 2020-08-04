@@ -79,7 +79,7 @@ class gottcha2:
             html_string = start_file.read()
 
         # Make HTML folder
-        html_folder = os.path.join(self.scratch, 'html')
+        html_folder = os.path.join(self.scratch, 'html_report')
         os.mkdir(html_folder) if not os.path.exists(html_folder) else None
         for files_dict in output_list:
 
