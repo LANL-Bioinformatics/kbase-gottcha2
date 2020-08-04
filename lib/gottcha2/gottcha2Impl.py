@@ -69,7 +69,7 @@ class gottcha2:
         wf.write("</table>")
         wf.write("</body>\n")
 
-    def create_report(self, ws, output_list):
+    def create_report(self, ws, output_list, html_folder):
         output_html_files = list()
         output_zip_files = list()
         first_file = ""
@@ -79,7 +79,7 @@ class gottcha2:
             html_string = start_file.read()
 
         # Make HTML folder
-        html_folder = os.path.join(self.scratch, 'html_report')
+        # html_folder = os.path.join(self.scratch, 'gottcha2_output', 'html_report')
         os.mkdir(html_folder) if not os.path.exists(html_folder) else None
         for files_dict in output_list:
 
@@ -182,6 +182,10 @@ class gottcha2:
         # We can use the ReadsUtils module to download a FASTQ file from our Reads data object.
         # The return object gives us the path to the file that was created.
         logging.info('Downloading Reads data as a Fastq file.')
+        output_dir = os.path.join(self.scratch, f'gottcha2_output')
+        report_dir = os.path.join(output_dir, 'html_report')
+        params['output_dir'] = output_dir
+        params['report_dir'] = report_dir
         logging.info(f'params {params}')
         token = ctx['token']
         wsClient = workspaceService(self.workspaceURL, token=token)
@@ -264,7 +268,7 @@ class gottcha2:
             params['read_type']= read_type
             params['reads_item_i'] = reads_item_i
             output_list.append(self.exec_gottcha2(ctx, params)[0])
-        report_output = self.create_report(params.get('workspace_name'), output_list)
+        report_output = self.create_report(params.get('workspace_name'), output_list, params['report_dir'])
         output = {'report_name': report_output['name'], 'report_ref': report_output['ref']}
         #END run_gottcha2
 
@@ -357,7 +361,8 @@ class gottcha2:
         # label = params['reads_item_i']
         label = '_'.join(input_reads_obj_info[NAME_I].split('.')[:-1])
         logging.info(f'label {label}')
-        output_dir = os.path.join(self.scratch, f'gottcha2_output')
+        output_dir = params['output_dir']
+        report_dir = params['report_dir']
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
         ## default options
@@ -388,7 +393,6 @@ class gottcha2:
             raise ValueError(msg)
 
         # generate report directory and html file
-        report_dir = os.path.join(output_dir, 'html_report')
         if not os.path.exists(report_dir):
             os.makedirs(report_dir)
         summary_file_dt = os.path.join(report_dir,  f'{label}_gottcha2.datatable.html')
