@@ -417,12 +417,20 @@ class gottcha2:
                         os.path.join(report_dir, f'{label}_gottcha2.tree.svg'))
         html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
         logging.info(f'html_zipped {html_zipped}')
-
+        output_files = []
+        [output_files.append(f) for f in os.listdir(output_dir) if not os.path.isdir(os.path.join(output_dir, f))]
+        print(output_files)
+        for f in output_files:
+            shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}'))
+                # output_files_list.append({'path': os.path.join(report_dir, f'{label}_{output}'),
+                #                           'name': f'{label}_{output}'
+                #                           })
 
 
         # Step 5 - Build a Report and return
         objects_created = []
         output_files = glob(report_dir + f'/{label}*')
+
         logging.info(f'glob output_files {output_files}')
         output_files_list = []
         for file in output_files:
