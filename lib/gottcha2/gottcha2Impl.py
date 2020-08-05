@@ -72,10 +72,9 @@ class gottcha2:
         wf.write("</body>\n")
 
     def create_report(self, ws, output_list, html_folder):
-        output_html_files = list()
-        output_zip_files = list()
+        output_html_files = []
+        output_zip_files = []
         first_file = ""
-        html_string = ""
         html_count = 0
         with open('/kb/data/index_start.txt', 'r') as start_file:
             html_string = start_file.read()
@@ -119,10 +118,12 @@ class gottcha2:
                                   'name': 'index.html',
                                   'label': 'html files',
                                   'description': desc})
-
+        l = [p['output_files'] for p in output_list]
+        flat_list = [item for sublist in l for item in sublist]
+        logging.info(f"file links {flat_list}")
         report_params = {
             'direct_html_link_index': 0,
-            'file_links': output_zip_files,
+            'file_links': flat_list,
             'html_links': output_html_files,
             'workspace_name': ws
         }
@@ -431,12 +432,12 @@ class gottcha2:
                                           'name': file.split('/')[-1]
                                           })
         logging.info(f'output_files_list {output_files_list}')
-        zip_file = os.path.join(report_dir, f'{label}.zip')
-        with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
-            [myzip.write(name['path']) for name in output_files_list]
-        output_files_list.append({'path': zip_file,
-                                  'name': zip_file.split('/')[-1]
-                                  })
+        # zip_file = os.path.join(report_dir, f'{label}.zip')
+        # with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
+        #     [myzip.write(name['path']) for name in output_files_list]
+        # output_files_list.append({'path': zip_file,
+        #                           'name': zip_file.split('/')[-1]
+        #                           })
         # not used
         output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
                               'name': 'index.html'},
@@ -467,7 +468,7 @@ class gottcha2:
         # output = {'report_name': report_output['name'],
         #           'report_ref': report_output['ref'],
         #           'report_params': report_output['report_params']}
-        output = {'output_files': output_files_list}
+        output = {'output_files': output_files_list, 'html_zipped': html_zipped}
         #END exec_gottcha2
 
         # At some point might do deeper type checking...
