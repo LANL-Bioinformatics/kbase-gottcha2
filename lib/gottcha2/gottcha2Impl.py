@@ -5,6 +5,7 @@ import os
 import sys
 import subprocess
 import shutil
+from jinja2 import Template
 from installed_clients.WorkspaceClient import Workspace as workspaceService
 import requests
 from pprint import pprint, pformat
@@ -153,7 +154,22 @@ class gottcha2:
         print(message)
         sys.stdout.flush()
 
+    @staticmethod
+    def fill_template(template_file, params_dict, output_file):
+        """
+        Fill sbatch or commands template
+        :param template_file: path to template file
+        :param params_dict: parameters to fill template with
+        :param output_file: path to output file
+        :return:
+        """
 
+        with open(template_file, 'r') as fp:
+            doc = fp.read()
+        t = Template(doc)
+        template_string = t.render(params_dict)
+        with open(output_file, 'w') as fp:
+            fp.write(template_string)
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -394,7 +410,7 @@ class gottcha2:
         logging.info(f'cmd {cmd}')
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         logging.info(f'subprocess {p.communicate()}')
-        summary_file = os.path.join(output_dir, outprefix + '.summary.tsv')
+        summary_file = os.path.join(report_dir, f'{label}_{outprefix}.summary.tsv')
         lineage_file = os.path.join(output_dir, outprefix + '.lineage.tsv')
 
         if os.stat(lineage_file).st_size == 0:
@@ -406,10 +422,16 @@ class gottcha2:
         # generate report directory and html file
         if not os.path.exists(report_dir):
             os.makedirs(report_dir)
+        output_files = []
+        [output_files.append(f) for f in os.listdir(output_dir) if not os.path.isdir(os.path.join(output_dir, f))]
+        print(output_files)
+        for f in output_files:
+            shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}'))
         summary_file_dt = os.path.join(report_dir,  f'{label}_gottcha2.datatable.html')
 
         self._generate_DataTable(summary_file, summary_file_dt)
-        shutil.copy2('/kb/module/lib/gottcha2/src/index.html', os.path.join(report_dir, f'{label}_index.html'))
+        self.fill_template('/kb/module/lib/gottcha2/src/index.html.tmpl', {'label': label}, os.path.join(report_dir, f'{label}_index.html'))
+        # shutil.copy2('/kb/module/lib/gottcha2/src/index.html', os.path.join(report_dir, f'{label}_index.html'))
         shutil.copy2(os.path.join(output_dir, outprefix + '.krona.html'),
                      os.path.join(report_dir, f'{label}_gottcha2.krona.html'))
         if os.path.exists(os.path.join(output_dir, outprefix + '.tree.svg')):
@@ -417,14 +439,6 @@ class gottcha2:
                         os.path.join(report_dir, f'{label}_gottcha2.tree.svg'))
         html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
         logging.info(f'html_zipped {html_zipped}')
-        output_files = []
-        [output_files.append(f) for f in os.listdir(output_dir) if not os.path.isdir(os.path.join(output_dir, f))]
-        print(output_files)
-        for f in output_files:
-            shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}'))
-                # output_files_list.append({'path': os.path.join(report_dir, f'{label}_{output}'),
-                #                           'name': f'{label}_{output}'
-                #                           })
 
 
         # Step 5 - Build a Report and return
