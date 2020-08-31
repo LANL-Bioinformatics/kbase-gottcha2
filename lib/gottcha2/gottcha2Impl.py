@@ -157,19 +157,19 @@ class gottcha2:
     @staticmethod
     def fill_template(template_file, params_dict, output_file):
         """
-        Fill sbatch or commands template
+        Fill template
         :param template_file: path to template file
         :param params_dict: parameters to fill template with
         :param output_file: path to output file
         :return:
         """
-
         with open(template_file, 'r') as fp:
             doc = fp.read()
         t = Template(doc)
         template_string = t.render(params_dict)
         with open(output_file, 'w') as fp:
             fp.write(template_string)
+
     #END_CLASS_HEADER
 
     # config contains contents of config file in a hash or None if it couldn't
@@ -427,6 +427,7 @@ class gottcha2:
         print(output_files)
         for f in output_files:
             shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}'))
+
         summary_file_dt = os.path.join(report_dir,  f'{label}_gottcha2.datatable.html')
 
         self._generate_DataTable(summary_file, summary_file_dt)
@@ -461,35 +462,7 @@ class gottcha2:
         #                           'name': zip_file.split('/')[-1]
         #                           })
         # not used
-        output_html_files = [{'path': os.path.join(report_dir, 'index.html'),
-                              'name': 'index.html'},
-                             {'path': os.path.join(report_dir, 'gottcha2.krona.html'),
-                              'name': 'gottcha2.krona.html'},
-                             {'path': os.path.join(report_dir, 'gottcha2.datatable.html'),
-                              'name': 'gottcha2.datatable.html'},
-                             {'path': os.path.join(report_dir, 'gottcha2.tree.svg'),
-                              'name': 'gottcha2.tree.svg'}
-                             ]
-        # message = 'GOTTCHA2 run finished on %s against %s.' % (','.join(fastq_files_name), params['db_type'])
-        # report_params = {'message': message,
-        #                  'workspace_name': params.get('workspace_name'),
-        #                  'objects_created': objects_created,
-        #                  'file_links': output_files_list,
-        #                  'html_links': [html_zipped],
-        #                  'direct_html_link_index': 0,
-        #                  'html_window_height': 460}
-        #
-        # # STEP 6: contruct the output to send back
-        # kbase_report_client = KBaseReport(self.callback_url)
-        # report_output = kbase_report_client.create_extended_report(report_params)
-        # report_output['report_params'] = report_params
-        # logging.info(f'report output {report_output}')
-        #
-        # # Return references which will allow inline display of
-        # # the report in the Narrative
-        # output = {'report_name': report_output['name'],
-        #           'report_ref': report_output['ref'],
-        #           'report_params': report_output['report_params']}
+
         output = {'output_files': output_files_list, 'html_zipped': html_zipped}
         #END exec_gottcha2
 
