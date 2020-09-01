@@ -386,7 +386,10 @@ class gottcha2:
         logging.info(f"fastq files {fastq_files}")
         fastq_files_string = ' '.join(fastq_files)
         # label = params['reads_item_i']
-        label = '_'.join(input_reads_obj_info[NAME_I].split('.')[:-1])
+        if len(input_reads_obj_info[NAME_I].split('.')) > 1 :
+            label = '_'.join(input_reads_obj_info[NAME_I].split('.')[:-1])
+        else:
+            label = input_reads_obj_info[NAME_I]
         logging.info(f'label {label}')
         output_dir = params['output_dir']
         report_dir = params['report_dir']
