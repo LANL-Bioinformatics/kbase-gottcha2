@@ -1,6 +1,10 @@
 # gottcha2 release notes
 =========================================
 
+0.0.7
+-----
+* update to GOTTCHA2 version 2.1.7
+
 0.0.6
 -----
 * fix bug: accept only up to two input fastq.

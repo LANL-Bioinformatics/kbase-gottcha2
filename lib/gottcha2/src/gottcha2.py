@@ -2,7 +2,7 @@
 
 __author__    = "Po-E (Paul) Li, Bioscience Division, Los Alamos National Laboratory"
 __credits__   = ["Po-E Li", "Jason Gans", "Tracey Freites", "Patrick Chain"]
-__version__   = "2.1.6 BETA"
+__version__   = "2.1.7"
 __date__      = "2018/10/07"
 __copyright__ = """
 Copyright (2019). Traid National Security, LLC. This material was produced
@@ -488,7 +488,7 @@ def roll_up_taxonomy( r, db_stats, abu_col, tg_rank, mc, mr, ml, mz):
     filtered = (rep_df['LINEAR_LEN'] < ml)
     rep_df.loc[filtered, 'NOTE'] += "Filtered out (minLen > " + rep_df.loc[filtered, 'LINEAR_LEN'].astype(str) + "); "
     filtered = (rep_df['ZSCORE'] > mz)
-    rep_df.loc[filtered, 'NOTE'] += "Filtered out (minLen > " + rep_df.loc[filtered, 'ZSCORE'].astype(str) + "); "
+    rep_df.loc[filtered, 'NOTE'] += "Filtered out (maxZscore < " + rep_df.loc[filtered, 'ZSCORE'].astype(str) + "); "
 
     rep_df.drop(columns=['TAXID'], inplace=True)
     rep_df.rename(columns={"LVL_NAME": "NAME", "LVL_TAXID": "TAXID"}, inplace=True)
@@ -566,12 +566,12 @@ def readMapping(reads, db, threads, mm_penalty, presetx, samfile, logfile, nanop
     """
     input_file = " ".join(reads)
     
-    sr_opts = f"-x {presetx} --second=no -k24 -A1 -B{mm_penalty} -K100M -O30 -E30 -a -N1 -n1 -p1 -m24 -s30"
+    sr_opts = f"-x {presetx} --second=no -k24 -A1 -B{mm_penalty} -O30 -E30 -a -N1 -n1 -p1 -m24 -s30"
     if nanopore:
         sr_opts = f"-x {presetx} --second=no -a"
 
     bash_cmd   = "set -o pipefail; set -x;"
-    mm2_cmd    = f"cat {input_file} | minimap2 {sr_opts} -t{threads} {db}.mmi - "
+    mm2_cmd    = f"minimap2 {sr_opts} -t{threads} {db}.mmi {input_file}"
     filter_cmd = "gawk -F\\\\t '!/^@/ && !and($2,4) && !and($2,2048) { if(r!=$1.and($2,64)){r=$1.and($2,64); s=$14} if($14>=s){print} }'"
     cmd        = "%s %s 2>> %s | %s > %s"%(bash_cmd, mm2_cmd, logfile, filter_cmd, samfile)
 
