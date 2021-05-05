@@ -416,6 +416,9 @@ class gottcha2:
         summary_file = os.path.join(report_dir, f'{label}_{outprefix}.summary.tsv')
         lineage_file = os.path.join(output_dir, outprefix + '.lineage.tsv')
 
+        with open("/kb/module/work/tmp/gottcha2_output/gottcha2.gottcha_species.log", "r" ) as f:
+            logging.info(f.readlines())
+
         if os.stat(lineage_file).st_size == 0:
             msg = 'There is no taxonomy classification assignment against ' + params[
                 'db_type'] + ' reference DB. You may try another reference DB.'
