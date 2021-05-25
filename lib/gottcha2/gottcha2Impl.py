@@ -482,7 +482,7 @@ class gottcha2:
                                   })
         # not used
 
-        output = {'output_files': output_files_list}
+        output = {'output_files': output_files_list, 'file_links': output_files_list}
         #END exec_gottcha2
 
         # At some point might do deeper type checking...
