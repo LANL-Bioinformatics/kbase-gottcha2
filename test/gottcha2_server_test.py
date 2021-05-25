@@ -101,12 +101,14 @@ class gottcha2Test(unittest.TestCase):
         self.assertIn('report_ref', result)
         report = self.getWsClient().get_objects2({'objects': [{'ref': result['report_ref']}]})['data'][0]['data']
         logging.info(f'print report {report}')
-        pprint(report)
+        # pprint(report)
+        logging.info(self.getWsClient().get_objects2({'objects': [{'ref': result['report_ref']}]})['data'])
         self.assertIn('direct_html', report)
         self.assertIn('file_links', report)
         self.assertIn('html_links', report)
         self.assertIn('objects_created', report)
         self.assertIn('text_message', report)
+        # self.assertIn('gottcha2.gottcha_species.sam', report['html_links'])
 
         # test SingleEndLibrary test.fastq_reads
         # result = self.serviceImpl.run_gottcha2(self.ctx, {'workspace_name': self.wsName,
