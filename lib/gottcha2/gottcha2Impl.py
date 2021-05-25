@@ -435,9 +435,9 @@ class gottcha2:
         output_files = []
         [output_files.append(f) for f in os.listdir(output_dir) if not os.path.isdir(os.path.join(output_dir, f))]
 
-        zf = ZipFile(os.path.join(output_dir, f'{label}.zip'), mode='w')
-        [zf.write(os.path.join(output_dir, f)) for f in output_files if os.path.splitext(f)[1] != '.sam']
-        output_files.append(f'{label}.zip')
+        # zf = ZipFile(os.path.join(output_dir, f'{label}.zip'), mode='w')
+        # [zf.write(os.path.join(output_dir, f)) for f in output_files if os.path.splitext(f)[1] != '.sam']
+        # output_files.append(f'{label}.zip')
         print(f"output_files list {output_files}")
         # copy files from output_dir to report_dir if file is not .sam so it doesn't end up in the zip file
         [shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}')) for f in output_files if os.path.splitext(f)[1] != '.sam']
@@ -453,8 +453,8 @@ class gottcha2:
         if os.path.exists(os.path.join(output_dir, outprefix + '.tree.svg')):
             shutil.move(os.path.join(output_dir, outprefix + '.tree.svg'),
                         os.path.join(report_dir, f'{label}_gottcha2.tree.svg'))
-        html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
-        logging.info(f'html_zipped {html_zipped}')
+        # html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
+        # logging.info(f'html_zipped {html_zipped}')
 
 
         # copy .sam file to report_dir so that it's in the file_links
@@ -474,15 +474,15 @@ class gottcha2:
                                           'name': file.split('/')[-1]
                                           })
         logging.info(f'output_files_list {output_files_list}')
-        # zip_file = os.path.join(report_dir, f'{label}.zip')
-        # with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
-        #     [myzip.write(name['path']) for name in output_files_list]
-        # output_files_list.append({'path': zip_file,
-        #                           'name': zip_file.split('/')[-1]
-        #                           })
+        zip_file = os.path.join(report_dir, f'{label}.zip')
+        with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
+            [myzip.write(f['path']) for f in output_files_list if not f['path'].endswith('.sam')]
+        output_files_list.append({'path': zip_file,
+                                  'name': zip_file.split('/')[-1]
+                                  })
         # not used
 
-        output = {'output_files': output_files_list, 'html_zipped': html_zipped}
+        output = {'output_files': output_files_list}
         #END exec_gottcha2
 
         # At some point might do deeper type checking...
