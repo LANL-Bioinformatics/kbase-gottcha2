@@ -126,7 +126,7 @@ class gottcha2:
         logging.info(f'output_html_files {output_html_files}')
         report_params = {
             'direct_html_link_index': 0,
-            'file_links': output_zip_files,
+            'file_links': flat_list,
             'html_links': output_html_files,
             'workspace_name': ws
         }
