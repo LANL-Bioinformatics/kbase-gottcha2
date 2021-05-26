@@ -122,6 +122,8 @@ class gottcha2:
         l = [p['output_files'] for p in output_list]
         flat_list = [item for sublist in l for item in sublist]
         logging.info(f"file links {flat_list}")
+        logging.info(f'output_zip_files {output_zip_files}')
+        logging.info(f'output_html_files {output_html_files}')
         report_params = {
             'direct_html_link_index': 0,
             'file_links': flat_list,
@@ -130,6 +132,7 @@ class gottcha2:
         }
         kbase_report_client = KBaseReport(self.callback_url)
         output = kbase_report_client.create_extended_report(report_params)
+        logging.info(f'output {output}')
         return output
 
     def package_folder(self, folder_path, zip_file_name, zip_file_description):
@@ -296,6 +299,7 @@ class gottcha2:
             params['reads_item_i'] = reads_item_i
             output_list.append(self.exec_gottcha2(ctx, params)[0])
         report_output = self.create_report(params.get('workspace_name'), output_list, params['report_dir'])
+        logging.info(f'report_output {report_output}')
         output = {'report_name': report_output['name'], 'report_ref': report_output['ref']}
         #END run_gottcha2
 
@@ -430,9 +434,14 @@ class gottcha2:
             os.makedirs(report_dir)
         output_files = []
         [output_files.append(f) for f in os.listdir(output_dir) if not os.path.isdir(os.path.join(output_dir, f))]
-        print(output_files)
-        for f in output_files:
-            shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}'))
+
+        # zf = ZipFile(os.path.join(output_dir, f'{label}.zip'), mode='w')
+        # [zf.write(os.path.join(output_dir, f)) for f in output_files if os.path.splitext(f)[1] != '.sam']
+        # output_files.append(f'{label}.zip')
+        print(f"output_files list {output_files}")
+        # copy files from output_dir to report_dir if file is not .sam so it doesn't end up in the zip file
+        [shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}')) for f in output_files if os.path.splitext(f)[1] != '.sam']
+
 
         summary_file_dt = os.path.join(report_dir,  f'{label}_gottcha2.datatable.html')
 
@@ -444,9 +453,13 @@ class gottcha2:
         if os.path.exists(os.path.join(output_dir, outprefix + '.tree.svg')):
             shutil.move(os.path.join(output_dir, outprefix + '.tree.svg'),
                         os.path.join(report_dir, f'{label}_gottcha2.tree.svg'))
-        html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
-        logging.info(f'html_zipped {html_zipped}')
+        # html_zipped = self.package_folder(report_dir, f'{label}.zip', f'{label}.zip')
+        # logging.info(f'html_zipped {html_zipped}')
 
+
+        # copy .sam file to report_dir so that it's in the file_links
+        [shutil.copy2(os.path.join(output_dir, f), os.path.join(report_dir, f'{label}_{f}')) for f in output_files if
+         os.path.splitext(f)[1] == '.sam']
 
         # Step 5 - Build a Report and return
         objects_created = []
@@ -461,15 +474,15 @@ class gottcha2:
                                           'name': file.split('/')[-1]
                                           })
         logging.info(f'output_files_list {output_files_list}')
-        # zip_file = os.path.join(report_dir, f'{label}.zip')
-        # with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
-        #     [myzip.write(name['path']) for name in output_files_list]
-        # output_files_list.append({'path': zip_file,
-        #                           'name': zip_file.split('/')[-1]
-        #                           })
+        zip_file = os.path.join(report_dir, f'{label}.zip')
+        with ZipFile(zip_file, 'w', allowZip64=True) as myzip:
+            [myzip.write(f['path']) for f in output_files_list if not f['path'].endswith('.sam')]
+        output_files_list.append({'path': zip_file,
+                                  'name': zip_file.split('/')[-1]
+                                  })
         # not used
 
-        output = {'output_files': output_files_list, 'html_zipped': html_zipped}
+        output = {'output_files': output_files_list, 'file_links': output_files_list}
         #END exec_gottcha2
 
         # At some point might do deeper type checking...
